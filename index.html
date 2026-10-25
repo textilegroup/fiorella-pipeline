@@ -548,7 +548,7 @@ a.kc-btn{text-decoration:none}
 }
 
 /* menu de escolha do gateway */
-.gw-menu{position:fixed;z-index:9300;width:430px;max-width:calc(100vw - 16px);background:var(--card);
+.gw-menu{position:fixed;z-index:9300;width:500px;max-width:calc(100vw - 16px);background:var(--card);
   border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.26);
   overflow:hidden}
 .gw-menu .gm-cab{padding:10px 13px;background:var(--sunk);border-bottom:1px solid var(--line);
@@ -581,6 +581,9 @@ a.kc-btn{text-decoration:none}
   padding:0 6px;color:var(--ink-2);font-size:10px}
 .gw-menu .gm-tipos{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .gw-menu .gm-tipos.cinco{grid-template-columns:repeat(5,1fr)}
+.gw-menu .gm-lado{display:flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;color:var(--ink-3)}
+.gw-menu .gm-lado select{padding:3px 4px;border:1px solid var(--line);border-radius:6px;background:var(--card);
+  color:var(--ink);font-size:11px}
 .gw-menu .gm-tipo{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 4px;
   border:1px solid var(--line);border-radius:9px;background:var(--card);cursor:pointer;
   font-family:inherit;font-size:11px;font-weight:700;color:var(--ink-2)}
@@ -1376,6 +1379,20 @@ body.com-painel .barra-selecao{right:400px}
         </select></div>
       <div class="campo"><label>Ordem entre as saídas</label>
         <input type="number" id="fLigOrdem" value="0" min="0"></div>
+    </div>
+    <div class="linha">
+      <div class="campo"><label>Sai pelo lado</label>
+        <select id="fLigLadoSaida">
+          <option value="auto">Automático</option><option value="t">Em cima</option>
+          <option value="b">Embaixo</option><option value="l">À esquerda</option><option value="r">À direita</option>
+        </select>
+        <span class="ajuda">Da etapa de origem ou da ponta do losango.</span></div>
+      <div class="campo"><label>Entra pelo lado</label>
+        <select id="fLigLadoEntrada">
+          <option value="auto">Automático</option><option value="t">Em cima</option>
+          <option value="b">Embaixo</option><option value="l">À esquerda</option><option value="r">À direita</option>
+        </select>
+        <span class="ajuda">Lado da etapa de chegada onde a seta encosta.</span></div>
     </div>
   </div>
   <div class="modal-pe">
@@ -2698,6 +2715,9 @@ function figurasBPMN(fid, r, extras){
       padrao: l.tipo === 'padrao',
       aCentro: !!doCentro[l.de_etapa_id],
       chegadaDireta: !!(aoAlvo && aoAlvo.gateway_entrada === 'direto' && porDestino[l.para_etapa_id].length > 1),
+      ladoA: l.lado_saida && l.lado_saida !== 'auto' ? l.lado_saida : '',
+      ladoB: l.lado_entrada && l.lado_entrada !== 'auto' && (entrada[l.para_etapa_id] || r[l.para_etapa_id]) === r[l.para_etapa_id]
+               ? l.lado_entrada : '',
       rascunho: !!l.rascunho,
       de: l.rascunho ? '' : l.de_etapa_id,
       para: l.rascunho ? '' : l.para_etapa_id
@@ -3251,8 +3271,10 @@ function rotaSeta(s){
   var lanesY = [gy1 - 28, gy2 + 28, Math.min(A.y, B.y) - 28, Math.max(A.y + A.h, B.y + B.h) + 28]
     .map(function(v){ return Math.max(8, v); });
   var melhor = null, menor = Infinity;
-  ['b','r','l','t'].forEach(function(la){
-    ['t','l','r','b'].forEach(function(lb){
+  var ladosSaida = s.ladoA && DIRS[s.ladoA] ? [s.ladoA] : ['b','r','l','t'];
+  var ladosEntrada = s.ladoB && DIRS[s.ladoB] ? [s.ladoB] : ['t','l','r','b'];
+  ladosSaida.forEach(function(la){
+    ladosEntrada.forEach(function(lb){
       var da = DIRS[la], db = DIRS[lb];
       var a0 = s.aCentro ? { x:A.x + A.w/2, y:A.y + A.h/2 } : pontoNoLado(A, la);
       var esc = s.aCentro ? A.w/2 + TOCO : TOCO;
@@ -4082,12 +4104,20 @@ function abrirDecisao(etapaId, lado, x, y){
         tipo: e[lado === 'entrada' ? 'gateway_entrada' : 'gateway_saida'] || 'exclusivo',
         linhas: lista.map(function(l){
           return { de:l.de_etapa_id, para:l.para_etapa_id, rotulo:l.rotulo || '',
-                   padrao: l.tipo === 'padrao', tipo: l.tipo };
+                   padrao: l.tipo === 'padrao', tipo: l.tipo,
+                   ladoS: l.lado_saida || 'auto', ladoE: l.lado_entrada || 'auto' };
         })
       };
       renderDecisao();
     })
     .catch(function(err){ erroSb(err, 'abrir a decisão'); });
+}
+var LADOS_SETA = [['auto','auto'],['t','em cima'],['b','embaixo'],['l','à esquerda'],['r','à direita']];
+function seletorLado(chave, valor, rotulo, titulo){
+  return '<label class="gm-lado" title="' + esc(titulo) + '">' + rotulo +
+    '<select data-gm="' + chave + '">' + LADOS_SETA.map(function(o){
+      return '<option value="' + o[0] + '"' + ((valor || 'auto') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>';
+    }).join('') + '</select></label>';
 }
 function renderDecisao(){
   var D = S.decisao, menu = $('gwMenu');
@@ -4116,6 +4146,10 @@ function renderDecisao(){
             '<span class="gm-origem" title="Etapa de onde a seta vem">' + esc(nomeEtapa(l.de)) + '</span>' +
             '<input type="text" data-gm="rotulo" maxlength="40" value="' + esc(l.rotulo) + '" placeholder="Texto na seta">' +
             '<button type="button" class="gm-ic" data-gm="tirar" title="Apagar esta seta">&times;</button>' +
+            '<div class="gm-ctl">' +
+              seletorLado('ladoS', l.ladoS, 'sai', 'Por qual lado a seta sai da etapa de origem') +
+              seletorLado('ladoE', l.ladoE, 'entra', 'Por qual lado a seta entra nesta etapa') +
+            '</div>' +
           '</div>';
         }
         return '<div class="gm-linha" data-i="' + i + '">' +
@@ -4131,6 +4165,8 @@ function renderDecisao(){
           '<div class="gm-ctl">' +
             '<label class="gm-padrao" title="Caminho padrão: o que vale quando nenhum outro se aplica">' +
               '<input type="radio" name="gmPadrao" data-gm="padrao"' + (l.padrao ? ' checked' : '') + '> padrão</label>' +
+            seletorLado('ladoS', l.ladoS, 'sai', 'Por qual ponta do losango este caminho sai') +
+            seletorLado('ladoE', l.ladoE, 'entra', 'Por qual lado a seta entra na etapa de chegada') +
             '<button type="button" class="gm-ic" data-gm="sobe" title="Subir"' + (i === 0 ? ' disabled' : '') + '>&uarr;</button>' +
             '<button type="button" class="gm-ic" data-gm="desce" title="Descer"' +
               (i === D.linhas.length - 1 ? ' disabled' : '') + '>&darr;</button>' +
@@ -4174,6 +4210,10 @@ function ligarDecisao(menu){
       txt.addEventListener('input', function(){ l.rotulo = txt.value; });
       txt.addEventListener('keydown', function(ev){ if(ev.key === 'Enter'){ ev.preventDefault(); salvarDecisao(); } });
     }
+    ['ladoS','ladoE'].forEach(function(k){
+      var sl = lin.querySelector('[data-gm="' + k + '"]');
+      if(sl) sl.addEventListener('change', function(){ l[k] = sl.value; });
+    });
     var rad = lin.querySelector('[data-gm="padrao"]');
     if(rad) rad.addEventListener('change', function(){
       D.linhas.forEach(function(x, k){ x.padrao = k === i; });
@@ -4185,7 +4225,7 @@ function ligarDecisao(menu){
   });
   var add = menu.querySelector('[data-gm="add"]');
   if(add) add.addEventListener('click', function(){
-    D.linhas.push({ de:D.etapa, para:'', rotulo:'', padrao:false, tipo:'sequencia' });
+    D.linhas.push({ de:D.etapa, para:'', rotulo:'', padrao:false, tipo:'sequencia', ladoS:'auto', ladoE:'auto' });
     renderDecisao();
     var sels = menu.querySelectorAll('[data-gm="para"]');
     if(sels.length) sels[sels.length - 1].focus();
@@ -4224,7 +4264,8 @@ function salvarDecisao(){
     var tipo = l.tipo || 'sequencia';
     if(saida) tipo = l.padrao ? 'padrao' : (tipo === 'padrao' ? 'sequencia' : tipo);
     return { funil_id:fid, de_etapa_id: saida ? D.etapa : l.de, para_etapa_id: saida ? l.para : D.etapa,
-             rotulo: (l.rotulo || '').trim().slice(0, 40) || null, tipo: tipo, ordem: k };
+             rotulo: (l.rotulo || '').trim().slice(0, 40) || null, tipo: tipo, ordem: k,
+             lado_saida: l.ladoS || 'auto', lado_entrada: l.ladoE || 'auto' };
   });
   var passos = Promise.resolve();
   if((e[campo] || 'exclusivo') !== D.tipo){
@@ -5801,6 +5842,8 @@ function abrirLigacaoForm(id){
   $('fLigRotulo').value = l ? (l.rotulo || '') : '';
   $('fLigTipo').value = l ? l.tipo : 'sequencia';
   $('fLigOrdem').value = l ? num(l.ordem) : (S.admLigacoes || []).length;
+  $('fLigLadoSaida').value = (l && l.lado_saida) || 'auto';
+  $('fLigLadoEntrada').value = (l && l.lado_entrada) || 'auto';
   $('btnExcluirLigacao').hidden = !l;
   abrir('mdLigacao');
 }
@@ -5812,7 +5855,9 @@ function salvarLigacao(){
     funil_id: S.admFunilId, de_etapa_id: de, para_etapa_id: para,
     rotulo: $('fLigRotulo').value.trim() || null,
     tipo: $('fLigTipo').value,
-    ordem: parseInt($('fLigOrdem').value, 10) || 0
+    ordem: parseInt($('fLigOrdem').value, 10) || 0,
+    lado_saida: $('fLigLadoSaida').value || 'auto',
+    lado_entrada: $('fLigLadoEntrada').value || 'auto'
   };
   var l = S.edit.ligacao;
   Promise.resolve(l ? sb.from(T.ligacoes).update(reg).eq('id', l.id)
