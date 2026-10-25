@@ -6437,4 +6437,276 @@ function addAcao(a){
     var t = linha.querySelector('.tipo').value;
     linha.querySelector('.val-etapa').hidden  = t !== 'mover';
     linha.querySelector('.val-pessoa').hidden = t !== 'responsavel';
-    linha.querySelect
+    linha.querySelector('.val-texto').hidden  = t !== 'comentar';
+  }
+  linha.querySelector('.tipo').addEventListener('change', ajustar);
+  linha.querySelector('.x').addEventListener('click', function(){ linha.remove(); });
+  $('acaoLista').appendChild(linha);
+  ajustar();
+}
+
+function lerAcoes(){
+  return Array.prototype.map.call($('acaoLista').querySelectorAll('.acao-linha'), function(l){
+    var t = l.querySelector('.tipo').value;
+    if(t === 'mover')       return { acao:'mover', etapa_id: l.querySelector('.val-etapa').value };
+    if(t === 'responsavel') return { acao:'responsavel', valor: l.querySelector('.val-pessoa').value };
+    return { acao:'comentar', valor: l.querySelector('.val-texto').value };
+  }).filter(function(a){
+    return a.acao === 'mover' ? !!a.etapa_id : !!a.valor;
+  });
+}
+
+function abrirRegraForm(id){
+  if(!S.admFunilId){ toast('Escolha um funil primeiro.', true); return; }
+  if(!(S.admEtapas || []).length){ toast('Cadastre as etapas antes das condicionais.', true); return; }
+  var r = id ? (S.admRegras || []).filter(function(x){ return x.id === id; })[0] : null;
+  S.edit.regra = r || null;
+  $('mdRegraTit').textContent = r ? 'Editar automação' : 'Nova automação';
+  $('fRegraNome').value = r ? r.nome : '';
+  $('fRegraGatilho').value = r ? r.gatilho : 'salvar';
+  $('fRegraPrazo').value = r && r.prazo_dias ? r.prazo_dias : '';
+  $('fRegraLogica').value = r ? r.logica : 'E';
+  $('fRegraAtivo').checked = r ? r.ativo : true;
+  opcoesEtapas($('fRegraOrigem'), r ? (r.etapa_origem_id || '') : '', true);
+  $('condLista').innerHTML = '';
+  ((r && r.condicoes) || []).forEach(addCondicao);
+  if(!r) addCondicao();
+  $('acaoLista').innerHTML = '';
+  acoesDaRegra(r || {}).forEach(addAcao);
+  if(!r) addAcao({ acao:'mover', etapa_id: (S.admEtapas[1] || S.admEtapas[0] || {}).id });
+  gatilhoMudou();
+  $('btnExcluirRegra').hidden = !r;
+  abrir('mdRegra');
+}
+
+function salvarRegra(){
+  var nome = $('fRegraNome').value.trim();
+  if(!nome){ toast('Dê um nome à automação.', true); return; }
+  var gatilho = $('fRegraGatilho').value;
+  var conds = lerCondicoes().filter(function(c){ return c.campo; });
+  if(!conds.length && gatilho !== 'entrada' && gatilho !== 'prazo'){
+    toast('Adicione ao menos uma condição.', true); return;
+  }
+  var acoes = lerAcoes();
+  if(!acoes.length){ toast('Adicione ao menos uma ação.', true); return; }
+  var origem = $('fRegraOrigem').value || null;
+  var mover = acoes.filter(function(a){ return a.acao === 'mover'; })[0];
+  if(origem && mover && origem === mover.etapa_id){
+    toast('Origem e destino não podem ser a mesma etapa.', true); return;
+  }
+
+  var reg = {
+    funil_id: S.admFunilId, nome: nome,
+    etapa_origem_id: origem,
+    etapa_destino_id: mover ? mover.etapa_id : null,
+    acoes: acoes,
+    prazo_dias: gatilho === 'prazo' && $('fRegraPrazo').value !== ''
+      ? parseInt($('fRegraPrazo').value, 10) : null,
+    logica: $('fRegraLogica').value, condicoes: conds,
+    gatilho: gatilho, ativo: $('fRegraAtivo').checked,
+    ordem: S.edit.regra ? S.edit.regra.ordem : (S.admRegras || []).length
+  };
+  var r = S.edit.regra;
+  var p = r ? sb.from(T.regras).update(reg).eq('id', r.id)
+            : sb.from(T.regras).insert(reg);
+  p.then(function(res){
+    if(res.error) throw res.error;
+    fechar('mdRegra');
+    return carregarAdmFunil(S.admFunilId);
+  }).then(function(){
+    renderAdm();
+  }).then(function(){ toast('Condicional salva'); })
+   .catch(function(e){ erroSb(e, 'salvar condicional'); });
+}
+
+function excluirRegra(){
+  var r = S.edit.regra;
+  if(!r) return;
+  if(!confirm('Excluir a condicional "' + r.nome + '"?')) return;
+  sb.from(T.regras).delete().eq('id', r.id).then(function(res){
+    if(res.error) throw res.error;
+    fechar('mdRegra');
+    return carregarAdmFunil(S.admFunilId);
+  }).then(function(){
+    renderAdm();
+  }).then(function(){ toast('Condicional excluída'); })
+   .catch(function(e){ erroSb(e, 'excluir condicional'); });
+}
+
+/* ---- acesso: pessoas do hub e limpeza de responsáveis antigos ---- */
+function foraDoHub(){
+  var cards = S.cardsTodos.filter(function(c){ return c.responsavel_nome && !doHub(c.responsavel_nome); });
+  var etapas = S.etapasTodas.filter(function(e){ return e.responsavel_nome && !doHub(e.responsavel_nome); });
+  return { cards: cards, etapas: etapas };
+}
+
+function limparForaDoHub(){
+  var fora = foraDoHub();
+  if(!fora.cards.length){ toast('Nenhum card com responsável fora do hub'); return; }
+  if(!confirm(fora.cards.length + ' card(s) estão com responsável que não é conta da Central de Acesso ' +
+              '(normalmente o vendedor que lançou o pedido). Limpar esse campo nesses cards?')) return;
+  Promise.all(fora.cards.map(function(c){
+    return sb.from(T.cards)
+      .update({ responsavel_nome: null, responsavel_email: null, atualizado_em: agora() })
+      .eq('id', c.id);
+  })).then(function(){ return carregarTudo(); })
+    .then(function(){ renderAdm(); toast(fora.cards.length + ' card(s) sem responsável — reatribua pelo hub'); })
+    .catch(function(e){ erroSb(e, 'limpar responsáveis'); });
+}
+
+function renderContas(){
+  var box = $('listaContas');
+  if(!box) return;
+  if(!S.contas.length){
+    box.innerHTML = '<div class="ajuda" style="color:var(--ink-3)">Lista indisponível — abra a Central de Acesso para administrar as pessoas.</div>';
+    return;
+  }
+  var niveis = { admin:'acesso total', usuario:'edição', consulta:'somente leitura' };
+  var fora = foraDoHub();
+  box.innerHTML =
+    (fora.cards.length || fora.etapas.length
+      ? '<div class="aviso erro" style="margin-bottom:12px">' +
+        'Só contas da Central de Acesso podem ser agentes do funil. ' +
+        (fora.cards.length ? '<strong>' + fora.cards.length + '</strong> card(s) ainda estão com um nome de fora ' +
+          '(vendedor do formulário, por exemplo). ' : '') +
+        (fora.etapas.length ? '<strong>' + fora.etapas.length + '</strong> etapa(s) também — corrija em Funis e etapas. ' : '') +
+        (fora.cards.length ? '<button class="btn sm" style="margin-top:8px" onclick="limparForaDoHub()">' +
+          'Limpar responsável desses cards</button>' : '') +
+        '</div>'
+      : '') +
+    '<table class="tab"><thead><tr><th>Pessoa</th><th>E-mail</th><th>Nível no hub</th></tr></thead><tbody>' +
+    S.contas.map(function(c){
+      return '<tr><td><strong>' + esc(c.nome || '') + '</strong></td><td>' + esc(c.email) + '</td>' +
+             '<td><span class="pill">' + esc(niveis[c.nivel] || c.nivel) + '</span></td></tr>';
+    }).join('') + '</tbody></table>';
+}
+
+/* --------------------------------------------------------------- inicio */
+function iniciar(){
+  sb = APP.sb;
+  aplicarTema(temaSalvo());
+  var rot = { admin:'Acesso total', editar:'Edição', ver:'Somente leitura' };
+  $('infoPerm').textContent = rot[APP.permissao] || '';
+  $('linkHub').href = APP.hub;
+  if(eAdmin()){
+    $('tabAdm').hidden = false;
+    $('btnNovoFunilAtalho').hidden = false;
+  }
+  carregarContas().then(carregarTudo);
+  ligarSyncAutomatico();
+
+  document.addEventListener('keydown', function(ev){
+    if(ev.key !== 'Escape') return;
+    if(document.querySelector('.modal.on')){
+      ['mdFunil','mdEtapa','mdCampo','mdRegra','mdCard','mdLigacao'].forEach(fechar);
+    } else if(S.menuGateway){ fecharMenuGateway(); }
+    else if(S.consultaFluxo){ fecharConsultaFluxo(); }
+    else if(S.painelEtapa){ fecharPainelEtapa(); }
+    else if(S.rascunho || S.ligando){ cancelarRascunho(); }
+    else if(S.organizando){ alternarOrganizar(); }
+  });
+  var eraMovel = ehMovel();
+  window.addEventListener('resize', function(){
+    ajustarTopoFlutuante();
+    if(ehMovel() !== eraMovel){ eraMovel = ehMovel(); renderKanban(); }
+  });
+  setTimeout(ajustarTopoFlutuante, 400);   /* a barra do hub pode entrar depois */
+  document.addEventListener('click', function(){ if(S.menuGateway) fecharMenuGateway(); });
+  Array.prototype.forEach.call(document.querySelectorAll('.modal'), function(m){
+    m.addEventListener('click', function(ev){ if(ev.target === m) m.classList.remove('on'); });
+  });
+}
+
+/* funcoes usadas pelos atributos onclick do HTML */
+window.abrirConsultaFluxo = abrirConsultaFluxo;
+window.fecharConsultaFluxo = fecharConsultaFluxo;
+window.alternarOrganizar = alternarOrganizar;
+window.arrumarSozinho = arrumarSozinho;
+window.salvarPosicoes = salvarPosicoes;
+window.alternarLigar = alternarLigar;
+window.abrirMenuGateway = abrirMenuGateway;
+window.fecharMenuGateway = fecharMenuGateway;
+window.comecarSaida = comecarSaida;
+window.abrirDecisao = abrirDecisao;
+window.editarEtapaNoMapa = editarEtapaNoMapa;
+window.editarFluxo = editarFluxo;
+window.editarFluxoDoAdm = editarFluxoDoAdm;
+window.S_funilId = S_funilId;
+window.cancelarRascunho = cancelarRascunho;
+window.confirmarRascunho = confirmarRascunho;
+window.novaEtapaNoFluxo = novaEtapaNoFluxo;
+window.novaEtapaNoFim = novaEtapaNoFim;
+window.apagarLigacao = apagarLigacao;
+window.abrirLigacaoForm = abrirLigacaoForm;
+window.salvarLigacao = salvarLigacao;
+window.excluirLigacao = excluirLigacao;
+window.gerarLigacoesPelaOrdem = gerarLigacoesPelaOrdem;
+window.verTodos = verTodos;
+window.escreverNaSeta = escreverNaSeta;
+window.fecharPainelEtapa = fecharPainelEtapa;
+window.irPara = irPara;
+window.admAba = admAba;
+window.admTrocarFunil = admTrocarFunil;
+window.carregarTudo = carregarTudo;
+window.carregarContas = carregarContas;
+window.limparForaDoHub = limparForaDoHub;
+window.limparSelecao = limparSelecao;
+window.movimentoMudou = movimentoMudou;
+window.quemAssinaMudou = quemAssinaMudou;
+window.ramoMudou = ramoMudou;
+window.gatilhoMudou = gatilhoMudou;
+window.addAcao = addAcao;
+window.excluirSelecionados = excluirSelecionados;
+window.renderKanban = renderKanban;
+window.buscar = buscar;
+window.toggleBuscaMovel = toggleBuscaMovel;
+window.voltarAosFunis = voltarAosFunis;
+window.liberarCard = liberarCard;
+window.aprovacaoPendente = aprovacaoPendente;
+window.escolherEtapaMovel = escolherEtapaMovel;
+window.trocarUsuarioVirtual = trocarUsuarioVirtual;
+window.trocarTema = trocarTema;
+window.moverSelecionados = moverSelecionados;
+window.rodarRegrasManual = rodarRegrasManual;
+window.sincronizar = sincronizar;
+window.novoCard = novoCard;
+window.abrirFunilForm = abrirFunilForm;
+window.salvarFunil = salvarFunil;
+window.excluirFunil = excluirFunil;
+window.abrirEtapaForm = abrirEtapaForm;
+window.salvarEtapa = salvarEtapa;
+window.excluirEtapa = excluirEtapa;
+window.duplicarEtapa = duplicarEtapa;
+window.duplicarEtapaAtual = duplicarEtapaAtual;
+window.abrirCampoForm = abrirCampoForm;
+window.salvarCampo = salvarCampo;
+window.excluirCampo = excluirCampo;
+window.sugerirChave = sugerirChave;
+window.toggleOpcoes = toggleOpcoes;
+window.origemFonteMudou = origemFonteMudou;
+window.salvarOrigem = salvarOrigem;
+window.carregarCamposDaFonte = carregarCamposDaFonte;
+window.abrirRegraForm = abrirRegraForm;
+window.salvarRegra = salvarRegra;
+window.excluirRegra = excluirRegra;
+window.addCondicao = addCondicao;
+window.abrirCardForm = abrirCardForm;
+window.salvarCard = salvarCard;
+window.excluirCard = excluirCard;
+window.aplicarEtapaResp = aplicarEtapaResp;
+window.comentarCard = comentarCard;
+window.fechar = fechar;
+/* expostos para teste do motor de condicionais */
+window.__motor = { testarCondicao: testarCondicao, regraBate: regraBate, valorDoCard: valorDoCard };
+
+if(window.APP && APP.pronto){
+  APP.pronto.then(iniciar).catch(function(){ /* guard ja mostrou o aviso */ });
+} else {
+  document.addEventListener('DOMContentLoaded', function(){
+    document.body.innerHTML = '<div class="vazio-geral">Esta página precisa da Central de Acesso para funcionar.</div>';
+  });
+}
+})();
+</script>
+</body>
+</html>
