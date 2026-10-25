@@ -580,6 +580,7 @@ a.kc-btn{text-decoration:none}
 .gw-menu .gm-qt{display:inline-block;background:var(--chip);border:1px solid var(--line-2);border-radius:9px;
   padding:0 6px;color:var(--ink-2);font-size:10px}
 .gw-menu .gm-tipos{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.gw-menu .gm-tipos.cinco{grid-template-columns:repeat(5,1fr)}
 .gw-menu .gm-tipo{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 4px;
   border:1px solid var(--line);border-radius:9px;background:var(--card);cursor:pointer;
   font-family:inherit;font-size:11px;font-weight:700;color:var(--ink-2)}
@@ -1268,6 +1269,14 @@ body.com-painel .barra-selecao{right:400px}
         <input type="text" id="fEtapaRamoRotulo" placeholder="Ex.: Pendência cadastral">
         <span class="ajuda">Aparece no topo da coluna de exceção.</span></div>
     </div>
+    <div class="campo"><label>Quando duas ou mais setas chegam</label>
+      <select id="fEtapaChegada">
+        <option value="direto">Entram direto na etapa, sem losango</option>
+        <option value="exclusivo">Losango de junção exclusivo</option>
+        <option value="paralelo">Losango de junção paralelo</option>
+        <option value="inclusivo">Losango de junção inclusivo</option>
+        <option value="complexo">Losango de junção complexo</option>
+      </select></div>
     <div class="campo" style="margin-top:-4px">
       <span class="ajuda">As setas que saem e chegam nesta etapa, o texto delas e o tipo de cada
         decisão são editados direto no fluxo: clique na seta ou no losango.</span></div>
@@ -2664,12 +2673,12 @@ function figurasBPMN(fid, r, extras){
   /* duas ou mais chegadas: losango de junção antes da etapa */
   Object.keys(porDestino).forEach(function(id){
     var lista = porDestino[id];
-    if(lista.length < 2){ entrada[id] = r[id]; return; }
+    var ed = etapaPor(id);
+    if(lista.length < 2 || (ed && ed.gateway_entrada === 'direto')){ entrada[id] = r[id]; return; }
     var novo = soReais(lista) < 2;
     var origens = lista.map(function(l){ return saida[l.de_etapa_id] || r[l.de_etapa_id]; });
     var g = posicaoGateway(r[id], origens);
     var cg = caixaPonto(g.x, g.y, GW_R);
-    var ed = etapaPor(id);
     fig.gateways.push({ x:g.x, y:g.y, tipo:(ed && ed.gateway_entrada) || 'exclusivo',
                         etapa: novo ? null : id, lado:'entrada', rascunho:novo });
     fig.setas.push({ a:cg, b:r[id], tipo:'principal', aCentro:true, rascunho:novo });
@@ -2688,6 +2697,7 @@ function figurasBPMN(fid, r, extras){
       ligacao: l.id || null,
       padrao: l.tipo === 'padrao',
       aCentro: !!doCentro[l.de_etapa_id],
+      chegadaDireta: !!(aoAlvo && aoAlvo.gateway_entrada === 'direto' && porDestino[l.para_etapa_id].length > 1),
       rascunho: !!l.rascunho,
       de: l.rascunho ? '' : l.de_etapa_id,
       para: l.rascunho ? '' : l.para_etapa_id
@@ -3065,7 +3075,10 @@ var GATEWAYS = [
   { v:'complexo',  nome:'Complexo',   marca:'✳',
     ajuda:'Regras mais complexas de decisão.' }
 ];
+var CHEGADA_DIRETA = { v:'direto', nome:'Direto', marca:'→',
+  ajuda:'Sem losango: as setas entram direto na etapa.' };
 function gatewayPor(v){
+  if(v === 'direto') return CHEGADA_DIRETA;
   return GATEWAYS.filter(function(g){ return g.v === v; })[0] || GATEWAYS[0];
 }
 /* a marca de dentro do losango, em SVG */
@@ -3226,7 +3239,7 @@ function sobreposicao(pts, irmas){
 var _rotasDaOrigem = {};
 function rotaSeta(s){
   var A = s.a, B = s.b, obst = S._obst || [];
-  var chave = s.aCentro ? (A.x + ',' + A.y) : '';
+  var chave = s.aCentro ? (A.x + ',' + A.y) : (s.chegadaDireta ? 'b:' + B.x + ',' + B.y : '');
   var irmas = chave ? (_rotasDaOrigem[chave] || []) : [];
   var gx1 = Infinity, gx2 = -Infinity, gy1 = Infinity, gy2 = -Infinity;
   obst.concat([A, B]).forEach(function(b){
@@ -4005,6 +4018,11 @@ function editarLigacaoNoDiagrama(id){
 /* losango de amostra, para o menu */
 function svgGatewayMini(tipo){
   var x = 15, y = 15, r = 13;
+  if(tipo === 'direto'){
+    return '<svg viewBox="0 0 30 30" class="gw-mini">' +
+      '<path class="gw-x" d="M4,9 L13,15 M4,21 L13,15 M13,15 L25,15"></path>' +
+      '<path d="M21,11 L26,15 L21,19" class="gw-x"></path></svg>';
+  }
   return '<svg viewBox="0 0 30 30" class="gw-mini">' +
     '<path class="gw" d="M' + x + ',' + (y-r) + ' L' + (x+r) + ',' + y +
       ' L' + x + ',' + (y+r) + ' L' + (x-r) + ',' + y + ' Z"></path>' +
@@ -4084,7 +4102,7 @@ function renderDecisao(){
       '<button type="button" class="gm-x" data-gm="fechar" title="Fechar sem salvar">&times;</button></div>' +
     '<div class="gm-corpo">' +
       '<div class="gm-sec">Tipo de ' + (saida ? 'decisão' : 'junção') + '</div>' +
-      '<div class="gm-tipos">' + GATEWAYS.map(function(t){
+      '<div class="gm-tipos' + (saida ? '' : ' cinco') + '">' + (saida ? GATEWAYS : GATEWAYS.concat([CHEGADA_DIRETA])).map(function(t){
         return '<button type="button" class="gm-tipo' + (t.v === D.tipo ? ' on' : '') + '" data-gm-tipo="' + t.v + '" ' +
           'title="' + esc(t.ajuda) + '">' + svgGatewayMini(t.v) + '<span>' + esc(t.nome) + '</span></button>';
       }).join('') + '</div>' +
@@ -6046,6 +6064,7 @@ function abrirEtapaForm(id){
   $('fEtapaRegras').value = e ? (e.regras || '') : '';
   selectResponsavel($('fEtapaResp'), e ? (e.responsavel_nome || '') : '');
   $('fEtapaMovimento').value = (e && e.movimento) || 'manual';
+  $('fEtapaChegada').value = (e && e.gateway_entrada) || 'exclusivo';
   preencherRamoDe(e);
   preencherAssinaturas(e);
   movimentoMudou();
@@ -6087,6 +6106,7 @@ function salvarEtapa(){
     ramo_de: $('fEtapaRamoDe').value || null,
     ramo_rotulo: $('fEtapaRamoDe').value ? ($('fEtapaRamoRotulo').value.trim() || null) : null,
     movimento: $('fEtapaMovimento').value,
+    gateway_entrada: $('fEtapaChegada').value || 'exclusivo',
     assinatura_chave: $('fEtapaMovimento').value === 'assinatura'
       ? ($('fEtapaAssinatura').value || null) : null,
     assinatura_quem: $('fEtapaQuemAssina').value || 'qualquer',
