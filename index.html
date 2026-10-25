@@ -548,7 +548,7 @@ a.kc-btn{text-decoration:none}
 }
 
 /* menu de escolha do gateway */
-.gw-menu{position:fixed;z-index:9300;width:286px;background:var(--card);
+.gw-menu{position:fixed;z-index:9300;width:430px;max-width:calc(100vw - 16px);background:var(--card);
   border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.26);
   overflow:hidden}
 .gw-menu .gm-cab{padding:10px 13px;background:var(--sunk);border-bottom:1px solid var(--line);
@@ -567,6 +567,58 @@ a.kc-btn{text-decoration:none}
 .gw-menu .gm-op .aj{display:block;font-size:10.5px;font-weight:600;color:var(--ink-3);margin-top:1px}
 .gw-menu .gm-op.on .nome{color:var(--wine)}
 .gw-menu .gm-pe{padding:9px 13px;font-size:10.5px;color:var(--ink-3);background:var(--sunk)}
+/* editor de decisão */
+.gw-menu{border-top:3px solid var(--wine);display:flex;flex-direction:column;max-height:calc(100vh - 16px)}
+.gw-menu .gm-cab{display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;
+  font-size:12px;font-weight:600;color:var(--ink-2);background:var(--card)}
+.gw-menu .gm-cab span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gw-menu .gm-cab b{color:var(--ink)}
+.gw-menu .gm-x{border:1px solid var(--line);background:var(--chip);color:var(--ink-2);border-radius:7px;
+  width:26px;height:26px;cursor:pointer;font-size:15px;line-height:1;flex:0 0 auto}
+.gw-menu .gm-corpo{padding:10px 13px 6px;overflow-y:auto}
+.gw-menu .gm-sec{font-size:10.5px;font-weight:700;color:var(--ink-3);margin:6px 0 6px}
+.gw-menu .gm-qt{display:inline-block;background:var(--chip);border:1px solid var(--line-2);border-radius:9px;
+  padding:0 6px;color:var(--ink-2);font-size:10px}
+.gw-menu .gm-tipos{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.gw-menu .gm-tipo{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 4px;
+  border:1px solid var(--line);border-radius:9px;background:var(--card);cursor:pointer;
+  font-family:inherit;font-size:11px;font-weight:700;color:var(--ink-2)}
+.gw-menu .gm-tipo svg{width:26px;height:26px}
+.gw-menu .gm-tipo:hover{border-color:var(--wine-soft)}
+.gw-menu .gm-tipo.on{border-color:var(--wine);background:rgba(200,16,46,.07);color:var(--wine)}
+.gw-menu .gm-tipo.on .gw-mini .gw,.gw-menu .gm-tipo.on .gw-mini .gw-x{stroke:var(--wine)}
+.gw-menu .gm-aj{font-size:11px;color:var(--ink-3);margin:6px 0 4px}
+.gw-menu .gm-linha{display:grid;grid-template-columns:22px 1fr 1fr;gap:6px;align-items:center;
+  padding:8px;border:1px solid var(--line-2);border-radius:9px;margin-bottom:6px;background:var(--sunk)}
+.gw-menu .gm-linha select,.gw-menu .gm-linha input[type=text]{min-width:0;padding:6px 8px;
+  border:1px solid var(--line);border-radius:7px;background:var(--card);color:var(--ink);font-size:12px}
+.gw-menu .gm-linha select:focus,.gw-menu .gm-linha input[type=text]:focus{outline:none;
+  border-color:var(--wine-soft);box-shadow:0 0 0 3px rgba(200,16,46,.12)}
+.gw-menu .gm-num{width:20px;height:20px;border-radius:50%;background:var(--wine);color:var(--wine-txt);
+  display:grid;place-items:center;font-size:10.5px;font-weight:700}
+.gw-menu .gm-origem{font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gw-menu .gm-linha > .gm-ic{justify-self:end}
+.gw-menu .gm-linha:has(.gm-origem){grid-template-columns:22px 1fr 1fr 28px}
+.gw-menu .gm-ctl{grid-column:2 / -1;display:flex;align-items:center;gap:5px}
+.gw-menu .gm-padrao{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600;
+  color:var(--ink-2);margin-right:auto;cursor:pointer}
+.gw-menu .gm-padrao input{accent-color:var(--wine)}
+.gw-menu .gm-ic{border:1px solid var(--line);background:var(--card);border-radius:7px;width:28px;height:26px;
+  cursor:pointer;color:var(--ink-2);font-size:13px;line-height:1}
+.gw-menu .gm-ic:hover:not(:disabled){border-color:var(--wine-soft);color:var(--wine)}
+.gw-menu .gm-ic:disabled{opacity:.35;cursor:default}
+.gw-menu .gm-ic[data-gm="tirar"]{color:var(--neg)}
+.gw-menu .gm-add{width:100%;margin:2px 0 8px;border-style:dashed}
+.gw-menu .gm-vazio{font-size:11.5px;color:var(--ink-3);padding:8px 0}
+.gw-menu .gm-nota{font-size:10.5px;color:var(--ink-3);margin-bottom:6px}
+.gw-menu .gm-acoes{display:flex;justify-content:flex-end;gap:6px;padding:10px 13px;
+  border-top:1px solid var(--line-2);background:var(--sunk)}
+/* setas clicáveis no modo de edição */
+.fluxo-svg path.seta-hit{fill:none;stroke:transparent;stroke-width:14;cursor:pointer}
+.fluxo-svg path.seta-hit:hover{stroke:rgba(200,16,46,.16)}
+.no-editar{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink-2);
+  border-radius:6px;padding:2px 8px;font-size:10.5px;font-weight:700;line-height:1.5;font-family:inherit;cursor:pointer}
+.no-editar:hover{border-color:var(--wine);color:var(--wine)}
 .fluxo-svg .timer{fill:var(--card);stroke:var(--ink-2);stroke-width:1.6}
 .fluxo-svg .timer-mao{stroke:var(--ink-2);stroke-width:1.4;stroke-linecap:round;fill:none}
 .fluxo-svg .prazo{stroke:var(--ink-3);stroke-width:1.6;stroke-dasharray:4 3;fill:none}
@@ -933,7 +985,7 @@ body.com-painel .barra-selecao{right:400px}
           <input id="buscaCard" class="busca" type="text" placeholder="Buscar card…" oninput="buscar(this.value)">
           <button class="btn sm" id="btnSincronizar" hidden onclick="sincronizar(false)">Sincronizar</button>
           <button class="btn sm" id="btnRegrasManual" onclick="rodarRegrasManual()">Rodar automações</button>
-          <button class="btn sm" id="btnOrganizar" hidden onclick="alternarOrganizar()">Organizar fluxo</button>
+          <button class="btn sm" id="btnOrganizar" hidden onclick="alternarOrganizar()">Editar fluxo</button>
           <button class="btn sm pri" id="btnNovoCard" onclick="novoCard()">Novo card</button>
         </div>
       </div>
@@ -946,12 +998,7 @@ body.com-painel .barra-selecao{right:400px}
     </div>
 
     <!-- escolha do gateway, no editor de fluxo -->
-    <div class="gw-menu no-print" id="gwMenu" hidden>
-      <div class="gm-cab">Gateway desta decisão</div>
-      <div id="gwMenuLista"></div>
-      <div class="gm-pe">O card anda por um caminho de cada vez — os outros símbolos
-        documentam a regra do processo.</div>
-    </div>
+    <div class="gw-menu no-print" id="gwMenu" role="dialog" aria-label="Editar decisão" hidden></div>
 
     <!-- celular: consulta do fluxo em tela cheia -->
     <div class="fluxo-consulta no-print" id="fluxoConsulta">
@@ -1003,42 +1050,13 @@ body.com-painel .barra-selecao{right:400px}
         </div>
       </div>
 
-      <div class="bloco" id="admEtapasBloco" hidden>
+      <div class="bloco" id="admFluxoBloco" hidden>
         <div class="cab">
-          <h2>Etapas de <span id="admEtapasFunil"></span></h2>
-          <span class="dica">Ordem, responsável, regras do botão recolhido e a listagem padrão da coluna.</span>
-          <button class="btn sm pri" style="margin-left:auto" onclick="abrirEtapaForm()">Nova etapa</button>
+          <h2>Etapas, setas e decisões de <span id="admFluxoFunil"></span></h2>
+          <span class="dica">Tudo isso é editado direto no fluxo, num lugar só.</span>
+          <button class="btn sm pri" style="margin-left:auto" onclick="editarFluxoDoAdm()">Editar no fluxo</button>
         </div>
-        <div class="corpo" style="padding:0">
-          <table class="tab">
-            <thead><tr>
-              <th style="width:70px">Ordem</th><th>Etapa</th><th>Tipo</th>
-              <th>Responsável</th><th>Regras</th><th class="num">Prazo</th><th></th>
-            </tr></thead>
-            <tbody id="admEtapasTbody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="bloco" id="admLigacoesBloco" hidden>
-        <div class="cab">
-          <h2>Ligações do diagrama</h2>
-          <span class="dica">As setas do fluxo: de qual etapa sai e em qual chega.</span>
-          <div style="margin-left:auto;display:flex;gap:8px">
-            <button class="btn sm" id="btnGerarLigacoes" onclick="gerarLigacoesPelaOrdem()">Gerar pela ordem</button>
-            <button class="btn sm pri" onclick="abrirLigacaoForm()">Nova ligação</button>
-          </div>
-        </div>
-        <div class="corpo" style="padding:0">
-          <div id="admLigacoesAviso"></div>
-          <table class="tab">
-            <thead><tr>
-              <th style="width:70px">Ordem</th><th>Sai de</th><th>Chega em</th>
-              <th>Texto na seta</th><th>Tipo</th><th></th>
-            </tr></thead>
-            <tbody id="admLigacoesTbody"></tbody>
-          </table>
-        </div>
+        <div class="corpo"><div id="admFluxoResumo"></div></div>
       </div>
     </div>
 
@@ -1250,24 +1268,9 @@ body.com-painel .barra-selecao{right:400px}
         <input type="text" id="fEtapaRamoRotulo" placeholder="Ex.: Pendência cadastral">
         <span class="ajuda">Aparece no topo da coluna de exceção.</span></div>
     </div>
-    <div class="campo"><label>Texto na seta desta etapa</label>
-      <input type="text" id="fEtapaSeta" maxlength="40"
-             placeholder="Ex.: depois do aceite do cliente">
-      <span class="ajuda">Escrito em cima da seta do diagrama — a que sai desta etapa, ou a que
-        chega nela quando a etapa é um fim. Serve para explicar o caminho a quem não conhece
-        BPMN. No modo <strong>Organizar fluxo</strong> dá para escrever clicando na própria seta.</span></div>
-    <div class="linha">
-      <div class="campo"><label>Gateway de saída</label>
-        <select id="fEtapaGwSaida"></select>
-        <span class="ajuda">Símbolo desenhado quando esta etapa tem duas ou mais setas saindo.</span></div>
-      <div class="campo"><label>Gateway de junção</label>
-        <select id="fEtapaGwEntrada"></select>
-        <span class="ajuda">Símbolo quando esta etapa recebe duas ou mais setas.</span></div>
-    </div>
     <div class="campo" style="margin-top:-4px">
-      <span class="ajuda">O símbolo documenta o processo. O card continua andando por
-        <strong>um caminho de cada vez</strong> — ele vive numa etapa só — então paralelo,
-        inclusivo e complexo descrevem a regra do negócio, não executam caminhos simultâneos.</span></div>
+      <span class="ajuda">As setas que saem e chegam nesta etapa, o texto delas e o tipo de cada
+        decisão são editados direto no fluxo: clique na seta ou no losango.</span></div>
     <div class="campo"><label>Regras da etapa</label>
       <textarea id="fEtapaRegras" placeholder="O que precisa acontecer nesta etapa. Este texto é o que aparece no botão recolhido do kanban."></textarea></div>
 
@@ -2685,7 +2688,9 @@ function figurasBPMN(fid, r, extras){
       ligacao: l.id || null,
       padrao: l.tipo === 'padrao',
       aCentro: !!doCentro[l.de_etapa_id],
-      rascunho: !!l.rascunho
+      rascunho: !!l.rascunho,
+      de: l.rascunho ? '' : l.de_etapa_id,
+      para: l.rascunho ? '' : l.para_etapa_id
     });
   });
 
@@ -2789,6 +2794,9 @@ function noHTML(e, termo){
           (ramo ? '&#8627; ' : '') + esc(e.nome) + '</span>' +
         '<span class="qtd">' + lista.length +
           (lista.length !== todos.length ? '/' + todos.length : '') + '</span>' +
+        (S.organizando && eAdmin()
+          ? '<button type="button" class="no-editar" data-editar-etapa="' + esc(e.id) + '" ' +
+            'title="Nome, tipo, responsável, prazo e regras da etapa">Editar</button>' : '') +
       '</div>' +
       '<div class="l2">' +
         (ramo ? '<span class="tag">exceção' + (e.ramo_rotulo ? ' · ' + esc(e.ramo_rotulo) : '') + '</span>' : '') +
@@ -3005,12 +3013,12 @@ function sobrepoem(lista){
 }
 
 /* ------------------------- desenho do diagrama ------------------------- */
-function svgRotulo(x, y, txt, etapaId, ligacaoId){
+function svgRotulo(x, y, txt, de, para){
   var larg = Math.max(34, String(txt).length * 5.8 + 14);
-  var editavel = S.organizando && (etapaId || ligacaoId);
+  var editavel = !!(S.organizando && eAdmin() && de && para);
   return '<g class="rot-g' + (editavel ? ' editavel' : '') + '"' +
-      (editavel && ligacaoId ? ' data-seta-lig="' + esc(ligacaoId) + '"'
-        : (editavel ? ' data-seta-etapa="' + esc(etapaId) + '"' : '')) + '>' +
+      (editavel ? ' data-seta-de="' + esc(de) + '" data-seta-para="' + esc(para) + '"' : '') + '>' +
+    (editavel ? '<title>Clique para editar ou apagar esta seta</title>' : '') +
     '<rect class="rotulo-fundo' + (editavel ? ' ed' : '') + '" x="' + (x - larg/2) + '" y="' + (y - 9) + '" ' +
       'width="' + larg + '" height="18" rx="5"></rect>' +
     '<text class="rotulo-txt" x="' + x + '" y="' + (y + 4) + '" text-anchor="middle">' +
@@ -3030,11 +3038,11 @@ function svgGateway(g){
   var d = 'M' + g.x + ',' + (g.y - GW_R) + ' L' + (g.x + GW_R) + ',' + g.y +
           ' L' + g.x + ',' + (g.y + GW_R) + ' L' + (g.x - GW_R) + ',' + g.y + ' Z';
   var tipo = g.tipo || 'exclusivo';
-  var editavel = S.organizando && g.etapa;
+  var editavel = !!(eAdmin() && g.etapa && !g.rascunho);
   return '<g class="gw-g' + (editavel ? ' editavel' : '') + '"' +
       (editavel ? ' data-gw-etapa="' + esc(g.etapa) + '" data-gw-lado="' + esc(g.lado) + '"' : '') +
       '><title>Gateway ' + esc(gatewayPor(tipo).nome.toLowerCase()) + ' — ' +
-      esc(gatewayPor(tipo).ajuda) + (editavel ? ' (clique para escolher outro)' : '') + '</title>' +
+      esc(gatewayPor(tipo).ajuda) + (editavel ? ' Clique para editar a decisão.' : '') + '</title>' +
     '<path class="gw' + (g.rascunho ? ' rascunho' : '') + '" d="' + d + '"></path>' +
     marcaGateway(tipo, g.x, g.y) +
   '</g>';
@@ -3198,8 +3206,28 @@ function custoRota(pts, obst, da, db){
   }
   return c;
 }
+function sobreposicao(pts, irmas){
+  var total = 0;
+  (irmas || []).forEach(function(q){
+    for(var i = 1; i < pts.length; i++){
+      var a = pts[i-1], b = pts[i];
+      for(var j = 1; j < q.length; j++){
+        var c = q[j-1], d = q[j];
+        if(a.x === b.x && c.x === d.x && Math.abs(a.x - c.x) < 3){
+          total += Math.max(0, Math.min(Math.max(a.y,b.y), Math.max(c.y,d.y)) - Math.max(Math.min(a.y,b.y), Math.min(c.y,d.y)));
+        } else if(a.y === b.y && c.y === d.y && Math.abs(a.y - c.y) < 3){
+          total += Math.max(0, Math.min(Math.max(a.x,b.x), Math.max(c.x,d.x)) - Math.max(Math.min(a.x,b.x), Math.min(c.x,d.x)));
+        }
+      }
+    }
+  });
+  return total;
+}
+var _rotasDaOrigem = {};
 function rotaSeta(s){
   var A = s.a, B = s.b, obst = S._obst || [];
+  var chave = s.aCentro ? (A.x + ',' + A.y) : '';
+  var irmas = chave ? (_rotasDaOrigem[chave] || []) : [];
   var gx1 = Infinity, gx2 = -Infinity, gy1 = Infinity, gy2 = -Infinity;
   obst.concat([A, B]).forEach(function(b){
     gx1 = Math.min(gx1, b.x); gx2 = Math.max(gx2, b.x + b.w);
@@ -3229,11 +3257,14 @@ function rotaSeta(s){
       meios.forEach(function(m){
         var pts = limparPontos([a0, a1].concat(m, [b1, b0]));
         var c = custoRota(pts, obst, da, db);
+        if(irmas.length) c += sobreposicao(pts, irmas) * 4;
         if(c < menor){ menor = c; melhor = pts; }
       });
     });
   });
-  return melhor || pontosDaRota(ancoras(A, B));
+  var rota = melhor || pontosDaRota(ancoras(A, B));
+  if(chave) (_rotasDaOrigem[chave] = _rotasDaOrigem[chave] || []).push(rota);
+  return rota;
 }
 function svgSeta(s){
   var pts = rotaSeta(s);
@@ -3277,15 +3308,22 @@ function desenharLigacoes(){
   }
   var fig = figurasBPMN(S.funil.id, r, extras);
 
+  _rotasDaOrigem = {};
   var fixas = fig.setas.filter(function(s){ return !s.rascunho; });
   var pendentes = fig.setas.filter(function(s){ return s.rascunho; });
   var linhas = fixas.map(svgSeta).join('');            /* svgSeta guarda a rota em s._pts */
   var linhasPend = pendentes.map(svgSeta).join('');
+  var usados = [];
   var rotulos = fig.setas.map(function(s){
-    var editavelAqui = S.organizando && (s.etapa || s.ligacao);
+    var editavelAqui = S.organizando && eAdmin() && s.de && s.para;
     if(!s.rotulo && !editavelAqui) return '';
     var m = pontoDoRotulo(s._pts || [{x:0,y:0}]);
-    return svgRotulo(m.x, m.y, s.rotulo || '+ texto', s.etapa, s.ligacao);
+    var txt = s.rotulo || '+ texto', larg = Math.max(34, txt.length * 5.8 + 14), tentativa = 0;
+    while(tentativa++ < 8 && usados.some(function(u){ return Math.abs(u.x - m.x) < (u.l + larg) / 2 + 4 && Math.abs(u.y - m.y) < 20; })){
+      m = { x:m.x, y:m.y + 22 };
+    }
+    usados.push({ x:m.x, y:m.y, l:larg });
+    return svgRotulo(m.x, m.y, txt, s.de, s.para);
   }).join('');
 
   /* quadro de confirmação: perto da seta pontilhada, ou embaixo da etapa nova */
@@ -3343,6 +3381,10 @@ function desenharLigacoes(){
         '<path d="M0,0 L8,4 L0,8 z" fill="var(--wine)" stroke="none"></path></marker></defs>' +
         linhasPend + fig.gateways.map(svgGateway).join('')
       : '') +
+    (S.organizando && eAdmin() ? fixas.filter(function(s){ return s.de && s.para && s._pts; }).map(function(s){
+      return '<path class="seta-hit" d="' + rotaD(s._pts, 14) + '" data-seta-de="' + esc(s.de) +
+             '" data-seta-para="' + esc(s.para) + '"><title>Clique para editar ou apagar esta seta</title></path>';
+    }).join('') : '') +
     fig.timers.map(svgTimer).join('') + rotulos;
 }
 var _quadroDesenho = 0;
@@ -3809,7 +3851,7 @@ function renderOrgBarra(){
   var b = $('btnOrganizar');
   if(b){
     b.hidden = !eAdmin() || ehMovel() || !!S.virtual || !S.etapas.length;
-    b.textContent = S.organizando ? 'Sair do organizar' : 'Organizar fluxo';
+    b.textContent = S.organizando ? 'Sair da edição' : 'Editar fluxo';
   }
   if(!S.organizando || S.virtual){ el.innerHTML = ''; return; }
   var mudou = Object.keys(S.posTemp).length;
@@ -3823,18 +3865,19 @@ function renderOrgBarra(){
   } else if(S.ligando){
     txt = 'Clique na etapa de onde a seta sai.';
   } else {
-    txt = 'Arraste cada etapa pelo cabeçalho; a posição gruda numa grade de ' + GRADE + 'px. ' +
-      'O <strong>+</strong> na borda de uma etapa desenha uma saída. Clique num espaço vazio para ' +
-      'criar uma etapa ali, no rótulo de uma seta para escrever nela, ou num losango para trocar a decisão.';
+    txt = 'Arraste cada etapa pelo cabeçalho. <strong>Editar</strong> abre os dados da etapa; o ' +
+      '<strong>+</strong> da borda desenha uma saída; um clique no vazio cria uma etapa ali; um clique ' +
+      'numa seta muda o texto ou apaga; um clique num losango edita a decisão inteira.';
   }
   el.innerHTML = '<div class="org-barra">' +
-    '<span class="t">Organizando o fluxo</span>' +
+    '<span class="t">Editando o fluxo</span>' +
     '<span>' + txt + (mudou ? ' <strong>' + mudou + ' etapa(s) movida(s).</strong>' : '') + '</span>' +
     '<span class="btns">' +
       (R || S.ligando
         ? '<button class="btn sm" onclick="cancelarRascunho()">Cancelar desenho</button>'
         : '<button class="btn sm" onclick="novaEtapaNoFim()">Nova etapa</button>' +
           '<button class="btn sm" onclick="alternarLigar()">Ligar etapas</button>') +
+      '<button class="btn sm" onclick="abrirFunilForm(S_funilId())">Regras do funil</button>' +
       '<button class="btn sm" onclick="arrumarSozinho()">Arrumar sozinho</button>' +
       '<button class="btn sm" onclick="alternarOrganizar()">Sair sem salvar</button>' +
       '<button class="btn sm pri" onclick="salvarPosicoes()">Salvar posições</button>' +
@@ -3918,29 +3961,22 @@ function ligarCanvasVazio(){
   });
 }
 function ligarRotulosDeSeta(){
-  if(!S.organizando) return;
   var tela = document.querySelector('#kanban .fluxo-tela');
-  if(!tela) return;
-  Array.prototype.forEach.call(tela.querySelectorAll('[data-seta-etapa]'), function(g){
-    g.style.pointerEvents = 'auto';
-    g.addEventListener('click', function(ev){
-      ev.stopPropagation();
-      escreverNaSeta(g.getAttribute('data-seta-etapa'));
-    });
-  });
+  if(!tela || !eAdmin()) return;
   Array.prototype.forEach.call(tela.querySelectorAll('[data-gw-etapa]'), function(g){
     g.style.pointerEvents = 'auto';
     g.addEventListener('click', function(ev){
       ev.stopPropagation();
-      abrirMenuGateway(g.getAttribute('data-gw-etapa'), g.getAttribute('data-gw-lado'),
-                       ev.clientX, ev.clientY);
+      abrirDecisao(g.getAttribute('data-gw-etapa'), g.getAttribute('data-gw-lado'), ev.clientX, ev.clientY);
     });
   });
-  Array.prototype.forEach.call(tela.querySelectorAll('[data-seta-lig]'), function(g){
-    g.style.pointerEvents = 'auto';
+  if(!S.organizando) return;
+  Array.prototype.forEach.call(tela.querySelectorAll('[data-seta-de]'), function(g){
+    g.style.pointerEvents = g.tagName.toLowerCase() === 'path' ? 'stroke' : 'auto';
     g.addEventListener('click', function(ev){
       ev.stopPropagation();
-      editarLigacaoNoDiagrama(g.getAttribute('data-seta-lig'));
+      if(S.rascunho) return;
+      abrirSetaNoMapa(g.getAttribute('data-seta-de'), g.getAttribute('data-seta-para'));
     });
   });
 }
@@ -3993,37 +4029,252 @@ function marcaGatewayMini(tipo, x, y){
 }
 
 /* mostra as quatro opções e só aplica depois da escolha */
-function abrirMenuGateway(etapaId, lado, x, y){
-  var e = etapaPor(etapaId);
-  if(!e || !eAdmin()) return;
-  var campo = lado === 'entrada' ? 'gateway_entrada' : 'gateway_saida';
-  var atual = e[campo] || 'exclusivo';
-  var menu = $('gwMenu');
-  if(!menu) return;
-  menu.querySelector('.gm-cab').textContent =
-    (lado === 'entrada' ? 'Junção antes de ' : 'Decisão na saída de ') + e.nome;
-  $('gwMenuLista').innerHTML = GATEWAYS.map(function(g){
-    return '<button class="gm-op' + (g.v === atual ? ' on' : '') + '" data-gw="' + g.v + '">' +
-      '<span class="fig">' + svgGatewayMini(g.v) + '</span>' +
-      '<span><span class="nome">' + esc(g.nome) + (g.v === atual ? ' &#10003;' : '') + '</span>' +
-      '<span class="aj">' + esc(g.ajuda) + '</span></span></button>';
-  }).join('');
-  menu.hidden = false;
-  var lg = menu.offsetWidth, at = menu.offsetHeight;
-  menu.style.left = Math.max(8, Math.min(window.innerWidth - lg - 8, x - lg/2)) + 'px';
-  menu.style.top  = Math.max(8, Math.min(window.innerHeight - at - 8, y + 16)) + 'px';
-  Array.prototype.forEach.call(menu.querySelectorAll('[data-gw]'), function(b){
-    b.addEventListener('click', function(ev){
-      ev.stopPropagation();
-      aplicarGateway(etapaId, campo, b.dataset.gw);
-    });
+function abrirMenuGateway(etapaId, lado, x, y){ return abrirDecisao(etapaId, lado, x, y); }
+
+/* ---------------- módulo de decisão: tipo + caminhos, editado no mapa ----------------
+   Saída: para onde cada caminho vai, o texto da seta, qual é o padrão e a ordem.
+   Junção: quais setas chegam e o texto delas. Salvo, o desenho se refaz na hora. */
+function S_funilId(){ return S.funil ? S.funil.id : null; }
+function garantirLigacoesProprias(fid){
+  if(temLigacoesProprias(fid)) return Promise.resolve();
+  var regs = ligacoesDeduzidas(fid).map(function(l, i){
+    return { funil_id:fid, de_etapa_id:l.de_etapa_id, para_etapa_id:l.para_etapa_id,
+             rotulo:l.rotulo || null, tipo:l.tipo, ordem:i };
   });
-  S.menuGateway = true;
+  if(!regs.length) return Promise.resolve();
+  return Promise.resolve(sb.from(T.ligacoes).insert(regs)).then(function(r){
+    if(r && r.error) throw r.error;
+  });
 }
+function abrirDecisao(etapaId, lado, x, y){
+  if(!eAdmin() || !S.funil) return;
+  var fid = S.funil.id;
+  lado = lado === 'entrada' ? 'entrada' : 'saida';
+  if(!S.organizando && !ehMovel()){ S.organizando = true; S.painelEtapa = ''; }
+  garantirLigacoesProprias(fid)
+    .then(function(){ return carregarAdmFunil(fid); })
+    .then(function(){
+      var e = etapaPor(etapaId);
+      if(!e) return;
+      var lista = ligacoesDoFunil(fid).filter(function(l){
+        return lado === 'entrada' ? l.para_etapa_id === etapaId : l.de_etapa_id === etapaId;
+      }).sort(function(a,b){ return num(a.ordem) - num(b.ordem); });
+      S.decisao = {
+        etapa: etapaId, lado: lado, x: x, y: y,
+        tipo: e[lado === 'entrada' ? 'gateway_entrada' : 'gateway_saida'] || 'exclusivo',
+        linhas: lista.map(function(l){
+          return { de:l.de_etapa_id, para:l.para_etapa_id, rotulo:l.rotulo || '',
+                   padrao: l.tipo === 'padrao', tipo: l.tipo };
+        })
+      };
+      renderDecisao();
+    })
+    .catch(function(err){ erroSb(err, 'abrir a decisão'); });
+}
+function renderDecisao(){
+  var D = S.decisao, menu = $('gwMenu');
+  if(!D || !menu) return;
+  var e = etapaPor(D.etapa);
+  var saida = D.lado === 'saida';
+  var outras = etapasOrdenadas(S.funil.id).filter(function(x){ return x.id !== D.etapa; });
+  var g = gatewayPor(D.tipo);
+  var html =
+    '<div class="gm-cab"><span>' + (saida ? 'Decisão na saída de ' : 'Junção antes de ') +
+      '<b>' + esc(e ? e.nome : '') + '</b></span>' +
+      '<button type="button" class="gm-x" data-gm="fechar" title="Fechar sem salvar">&times;</button></div>' +
+    '<div class="gm-corpo">' +
+      '<div class="gm-sec">Tipo de ' + (saida ? 'decisão' : 'junção') + '</div>' +
+      '<div class="gm-tipos">' + GATEWAYS.map(function(t){
+        return '<button type="button" class="gm-tipo' + (t.v === D.tipo ? ' on' : '') + '" data-gm-tipo="' + t.v + '" ' +
+          'title="' + esc(t.ajuda) + '">' + svgGatewayMini(t.v) + '<span>' + esc(t.nome) + '</span></button>';
+      }).join('') + '</div>' +
+      '<div class="gm-aj">' + esc(g.ajuda) + '</div>' +
+      '<div class="gm-sec">' + (saida ? 'Caminhos' : 'Setas que chegam') +
+        ' <span class="gm-qt">' + D.linhas.length + '</span></div>' +
+      (D.linhas.length ? D.linhas.map(function(l, i){
+        if(!saida){
+          return '<div class="gm-linha" data-i="' + i + '">' +
+            '<span class="gm-num">' + (i + 1) + '</span>' +
+            '<span class="gm-origem" title="Etapa de onde a seta vem">' + esc(nomeEtapa(l.de)) + '</span>' +
+            '<input type="text" data-gm="rotulo" maxlength="40" value="' + esc(l.rotulo) + '" placeholder="Texto na seta">' +
+            '<button type="button" class="gm-ic" data-gm="tirar" title="Apagar esta seta">&times;</button>' +
+          '</div>';
+        }
+        return '<div class="gm-linha" data-i="' + i + '">' +
+          '<span class="gm-num">' + (i + 1) + '</span>' +
+          '<select data-gm="para" title="Para onde este caminho leva">' +
+            '<option value="">Escolha a etapa</option>' +
+            outras.map(function(o){
+              return '<option value="' + esc(o.id) + '"' + (o.id === l.para ? ' selected' : '') + '>' +
+                (ehRamo(o) ? '↳ ' : '') + esc(o.nome) + '</option>';
+            }).join('') +
+          '</select>' +
+          '<input type="text" data-gm="rotulo" maxlength="40" value="' + esc(l.rotulo) + '" placeholder="Texto na seta (ex.: sim)">' +
+          '<div class="gm-ctl">' +
+            '<label class="gm-padrao" title="Caminho padrão: o que vale quando nenhum outro se aplica">' +
+              '<input type="radio" name="gmPadrao" data-gm="padrao"' + (l.padrao ? ' checked' : '') + '> padrão</label>' +
+            '<button type="button" class="gm-ic" data-gm="sobe" title="Subir"' + (i === 0 ? ' disabled' : '') + '>&uarr;</button>' +
+            '<button type="button" class="gm-ic" data-gm="desce" title="Descer"' +
+              (i === D.linhas.length - 1 ? ' disabled' : '') + '>&darr;</button>' +
+            '<button type="button" class="gm-ic" data-gm="tirar" title="Tirar este caminho">&times;</button>' +
+          '</div>' +
+        '</div>';
+      }).join('') : '<div class="gm-vazio">' + (saida ? 'Nenhum caminho saindo desta etapa.' : 'Nenhuma seta chegando.') + '</div>') +
+      (saida ? '<button type="button" class="btn sm gm-add" data-gm="add">+ Adicionar caminho</button>' : '') +
+      (saida && D.linhas.length < 2
+        ? '<div class="gm-nota">Com um caminho só, o losango não aparece no desenho.</div>' : '') +
+      '<div class="gm-nota">O card segue um caminho de cada vez. Paralelo, inclusivo e complexo ' +
+        'documentam a regra do processo.</div>' +
+    '</div>' +
+    '<div class="gm-acoes">' +
+      '<button type="button" class="btn sm" data-gm="fechar">Cancelar</button>' +
+      '<button type="button" class="btn sm pri" data-gm="salvar">Salvar decisão</button>' +
+    '</div>';
+  menu.innerHTML = html;
+  menu.hidden = false;
+  S.menuGateway = true;
+  var lg = menu.offsetWidth, at = menu.offsetHeight;
+  var px = D.x + 24, py = D.y - 40;
+  if(px + lg > window.innerWidth - 8) px = D.x - lg - 24;
+  menu.style.left = Math.max(8, Math.min(window.innerWidth - lg - 8, px)) + 'px';
+  menu.style.top  = Math.max(8, Math.min(window.innerHeight - at - 8, py)) + 'px';
+  ligarDecisao(menu);
+}
+function ligarDecisao(menu){
+  var D = S.decisao;
+  menu.onclick = function(ev){ ev.stopPropagation(); };
+  menu.onmousedown = function(ev){ ev.stopPropagation(); };
+  Array.prototype.forEach.call(menu.querySelectorAll('[data-gm-tipo]'), function(b){
+    b.addEventListener('click', function(){ D.tipo = b.dataset.gmTipo; renderDecisao(); });
+  });
+  Array.prototype.forEach.call(menu.querySelectorAll('.gm-linha'), function(lin){
+    var i = parseInt(lin.dataset.i, 10), l = D.linhas[i];
+    var sel = lin.querySelector('[data-gm="para"]');
+    if(sel) sel.addEventListener('change', function(){ l.para = sel.value; });
+    var txt = lin.querySelector('[data-gm="rotulo"]');
+    if(txt){
+      txt.addEventListener('input', function(){ l.rotulo = txt.value; });
+      txt.addEventListener('keydown', function(ev){ if(ev.key === 'Enter'){ ev.preventDefault(); salvarDecisao(); } });
+    }
+    var rad = lin.querySelector('[data-gm="padrao"]');
+    if(rad) rad.addEventListener('change', function(){
+      D.linhas.forEach(function(x, k){ x.padrao = k === i; });
+    });
+    function botao(acao, fn){ var b = lin.querySelector('[data-gm="' + acao + '"]'); if(b) b.addEventListener('click', fn); }
+    botao('sobe', function(){ if(i > 0){ D.linhas.splice(i - 1, 0, D.linhas.splice(i, 1)[0]); renderDecisao(); } });
+    botao('desce', function(){ if(i < D.linhas.length - 1){ D.linhas.splice(i + 1, 0, D.linhas.splice(i, 1)[0]); renderDecisao(); } });
+    botao('tirar', function(){ D.linhas.splice(i, 1); renderDecisao(); });
+  });
+  var add = menu.querySelector('[data-gm="add"]');
+  if(add) add.addEventListener('click', function(){
+    D.linhas.push({ de:D.etapa, para:'', rotulo:'', padrao:false, tipo:'sequencia' });
+    renderDecisao();
+    var sels = menu.querySelectorAll('[data-gm="para"]');
+    if(sels.length) sels[sels.length - 1].focus();
+  });
+  Array.prototype.forEach.call(menu.querySelectorAll('[data-gm="fechar"]'), function(b){
+    b.addEventListener('click', fecharMenuGateway);
+  });
+  menu.querySelector('[data-gm="salvar"]').addEventListener('click', salvarDecisao);
+}
+function salvarDecisao(){
+  var D = S.decisao;
+  if(!D || D.salvando || !S.funil) return;
+  var fid = S.funil.id, saida = D.lado === 'saida';
+  var e = etapaPor(D.etapa);
+  if(!e) return;
+  if(saida){
+    var vistos = {};
+    for(var i = 0; i < D.linhas.length; i++){
+      var l = D.linhas[i];
+      if(!l.para){ toast('Escolha para onde vai o caminho ' + (i + 1) + '.', true); return; }
+      if(vistos[l.para]){ toast('Dois caminhos levam para "' + nomeEtapa(l.para) + '". Deixe só um.', true); return; }
+      vistos[l.para] = true;
+    }
+  }
+  if(!D.linhas.length && !confirm(saida ? 'Tirar todas as saídas de "' + e.nome + '"?'
+                                        : 'Apagar todas as setas que chegam em "' + e.nome + '"?')) return;
+  D.salvando = true;
+  var b = $('gwMenu').querySelector('[data-gm="salvar"]');
+  if(b){ b.disabled = true; b.textContent = 'Salvando…'; }
+
+  var campo = saida ? 'gateway_saida' : 'gateway_entrada';
+  var antigas = ligacoesDoFunil(fid).filter(function(l){
+    return saida ? l.de_etapa_id === D.etapa : l.para_etapa_id === D.etapa;
+  });
+  var novas = D.linhas.map(function(l, k){
+    var tipo = l.tipo || 'sequencia';
+    if(saida) tipo = l.padrao ? 'padrao' : (tipo === 'padrao' ? 'sequencia' : tipo);
+    return { funil_id:fid, de_etapa_id: saida ? D.etapa : l.de, para_etapa_id: saida ? l.para : D.etapa,
+             rotulo: (l.rotulo || '').trim().slice(0, 40) || null, tipo: tipo, ordem: k };
+  });
+  var passos = Promise.resolve();
+  if((e[campo] || 'exclusivo') !== D.tipo){
+    var reg = {}; reg[campo] = D.tipo;
+    passos = passos.then(function(){
+      return Promise.resolve(sb.from(T.etapas).update(reg).eq('id', D.etapa))
+        .then(function(r){ if(r && r.error) throw r.error; });
+    });
+  }
+  /* troca o conjunto inteiro: apaga as setas antigas deste lado e grava as novas na ordem */
+  passos.then(function(){
+    return Promise.all(antigas.map(function(l){
+      return Promise.resolve(sb.from(T.ligacoes).delete().eq('id', l.id))
+        .then(function(r){ if(r && r.error) throw r.error; });
+    }));
+  }).then(function(){
+    if(!novas.length) return;
+    return Promise.resolve(sb.from(T.ligacoes).insert(novas)).then(function(r){ if(r && r.error) throw r.error; });
+  }).then(function(){
+    var id = D.etapa;
+    fecharMenuGateway();
+    return carregarAdmFunil(fid).then(function(){ toast('Decisão salva'); revelarEtapa(id); });
+  }).catch(function(err){
+    if(S.decisao) S.decisao.salvando = false;
+    renderDecisao();
+    erroSb(err, 'salvar a decisão');
+  });
+}
+/* um clique numa seta abre o editor dela (texto, tipo, apagar) */
+function abrirSetaNoMapa(de, para){
+  if(!eAdmin() || !S.funil) return;
+  var fid = S.funil.id;
+  garantirLigacoesProprias(fid)
+    .then(function(){ return carregarAdmFunil(fid); })
+    .then(function(){
+      var l = (S.admLigacoes || []).filter(function(x){
+        return x.de_etapa_id === de && x.para_etapa_id === para;
+      })[0];
+      if(!l){ toast('Não achei essa seta. Clique em Atualizar e tente de novo.', true); return; }
+      abrirLigacaoForm(l.id);
+    })
+    .catch(function(err){ erroSb(err, 'abrir a seta'); });
+}
+/* dados de uma etapa, editados a partir do mapa */
+function editarEtapaNoMapa(id){
+  if(!eAdmin() || !S.funil) return;
+  var fid = S.funil.id;
+  carregarAdmFunil(fid).then(function(){ abrirEtapaForm(id || null); });
+}
+/* da Administração para o fluxo, já em modo de edição */
+function editarFluxo(fid){
+  if(!fid) return;
+  irPara('funis');
+  Promise.resolve(abrirFunil(fid, true)).then(function(){
+    if(eAdmin() && !ehMovel() && S.funil && S.funil.id === fid && S.etapas.length){
+      S.organizando = true; S.painelEtapa = ''; S.rascunho = null; S.ligando = false;
+      renderKanban();
+    }
+    var bloco = $('blocoKanban');
+    if(bloco) setTimeout(function(){ bloco.scrollIntoView({ behavior: reduzMovimento() ? 'auto' : 'smooth', block:'start' }); }, 30);
+  });
+}
+function editarFluxoDoAdm(){ editarFluxo(S.admFunilId); }
 function fecharMenuGateway(){
   var menu = $('gwMenu');
-  if(menu){ menu.hidden = true; $('gwMenuLista').innerHTML = ''; }
+  if(menu){ menu.hidden = true; menu.innerHTML = ''; }
   S.menuGateway = false;
+  S.decisao = null;
 }
 function aplicarGateway(etapaId, campo, tipo){
   var e = etapaPor(etapaId);
@@ -4071,6 +4322,11 @@ function ligarArrastoNos(){
   Array.prototype.forEach.call(tela.querySelectorAll('[data-no]'), function(el){
     var cab = el.querySelector('.no-head');
     if(!cab) return;
+    var ed = el.querySelector('[data-editar-etapa]');
+    if(ed){
+      ed.addEventListener('mousedown', function(ev){ ev.stopPropagation(); });
+      ed.addEventListener('click', function(ev){ ev.stopPropagation(); editarEtapaNoMapa(ed.dataset.editarEtapa); });
+    }
     var alcas = el.querySelectorAll('[data-saida]');
     Array.prototype.forEach.call(alcas, function(b){
       b.addEventListener('mousedown', function(ev){ ev.stopPropagation(); });
@@ -4161,7 +4417,8 @@ function renderKanbanBase(){
   if(!S.etapas.length){
     box.className = 'kanban';
     box.innerHTML = '<div class="vazio-geral">Este funil ainda não tem etapas.' +
-      (eAdmin() ? ' Cadastre em <strong>Administração › Funis e etapas</strong>.' : '') + '</div>';
+      (eAdmin() ? '<div style="margin-top:12px"><button class="btn pri" onclick="editarEtapaNoMapa()">' +
+        'Criar a primeira etapa</button></div>' : '') + '</div>';
     S.colunasAtuais = [];
     S.organizando = false;
     S.consultaFluxo = false;
@@ -5471,14 +5728,14 @@ function renderAdmFunis(){
       '<td class="num">' + c.cards + '</td>' +
       '<td><span class="pill ' + (f.ativo ? 'on' : 'off') + '">' + (f.ativo ? 'ativo' : 'inativo') + '</span></td>' +
       '<td class="acoes">' +
-        '<button class="btn sm" data-etapas="' + esc(f.id) + '">Etapas</button> ' +
+        '<button class="btn sm" data-etapas="' + esc(f.id) + '">Editar fluxo</button> ' +
         '<button class="btn sm" data-editf="' + esc(f.id) + '">Editar</button>' +
       '</td></tr>';
   }).join('') : '<tr><td colspan="7" style="color:var(--ink-3);padding:18px">Nenhum funil ainda. Clique em “Novo funil”.</td></tr>';
 
   var tb = $('admFunisTbody');
   Array.prototype.forEach.call(tb.querySelectorAll('[data-etapas]'), function(b){
-    b.addEventListener('click', function(){ admTrocarFunil(b.dataset.etapas); });
+    b.addEventListener('click', function(){ editarFluxo(b.dataset.etapas); });
   });
   Array.prototype.forEach.call(tb.querySelectorAll('[data-editf]'), function(b){
     b.addEventListener('click', function(){ abrirFunilForm(b.dataset.editf); });
@@ -5487,82 +5744,29 @@ function renderAdmFunis(){
 
 function renderAdmEtapas(){
   var f = admFunil();
-  $('admEtapasBloco').hidden = !f;
+  var bloco = $('admFluxoBloco');
+  if(!bloco) return;
+  bloco.hidden = !f;
   if(!f) return;
-  $('admEtapasFunil').textContent = f.nome;
+  $('admFluxoFunil').textContent = f.nome;
   var etapas = S.admEtapas || [];
-  var tipos = { inicio:'entrada', normal:'intermediária', ganho:'ganho', perda:'perda' };
-  $('admEtapasTbody').innerHTML = etapas.length ? etapas.map(function(e, i){
-    return '<tr>' +
-      '<td><button class="btn sm" data-sobe="' + esc(e.id) + '"' + (i === 0 ? ' disabled' : '') + '>&uarr;</button> ' +
-          '<button class="btn sm" data-desce="' + esc(e.id) + '"' + (i === etapas.length-1 ? ' disabled' : '') + '>&darr;</button></td>' +
-      '<td>' + (e.ramo_de ? '<span style="color:var(--s2);margin-right:4px">&#8627;</span>' :
-          '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + esc(e.cor) + ';margin-right:6px"></span>') +
-          '<strong>' + esc(e.nome) + '</strong>' +
-          (e.ramo_de ? '<div style="font-size:10.5px;color:var(--s2)">exceção de ' +
-              esc(nomeEtapaQualquer(e.ramo_de)) + (e.ramo_rotulo ? ' · ' + esc(e.ramo_rotulo) : '') + '</div>' : '') +
-          '</td>' +
-      '<td><span class="pill ' + esc(e.tipo) + '">' + esc(tipos[e.tipo] || e.tipo) + '</span></td>' +
-      '<td>' + (e.responsavel_nome ? esc(e.responsavel_nome) : '<span style="color:var(--neg)">definir</span>') + '</td>' +
-      '<td style="color:var(--ink-2);max-width:230px;font-size:11.5px">' + esc(movimentoTexto(e)) + '</td>' +
-      '<td class="num">' + (e.prazo_dias || '—') + '</td>' +
-      '<td class="acoes">' +
-        '<button class="btn sm" data-dupe="' + esc(e.id) + '">Duplicar</button> ' +
-        '<button class="btn sm" data-edite="' + esc(e.id) + '">Editar</button></td>' +
-    '</tr>';
-  }).join('') : '<tr><td colspan="7" style="color:var(--ink-3);padding:18px">Nenhuma etapa. Clique em “Nova etapa”.</td></tr>';
-
-  var tb = $('admEtapasTbody');
-  Array.prototype.forEach.call(tb.querySelectorAll('[data-edite]'), function(b){
-    b.addEventListener('click', function(){ abrirEtapaForm(b.dataset.edite); });
-  });
-  Array.prototype.forEach.call(tb.querySelectorAll('[data-dupe]'), function(b){
-    b.addEventListener('click', function(){ duplicarEtapa(b.dataset.dupe); });
-  });
-  Array.prototype.forEach.call(tb.querySelectorAll('[data-sobe]'), function(b){
-    b.addEventListener('click', function(){ reordenarEtapa(b.dataset.sobe, -1); });
-  });
-  Array.prototype.forEach.call(tb.querySelectorAll('[data-desce]'), function(b){
-    b.addEventListener('click', function(){ reordenarEtapa(b.dataset.desce, 1); });
-  });
+  var setas = temLigacoesProprias(f.id) ? (S.admLigacoes || []).length : ligacoesDeduzidas(f.id).length;
+  var saidas = {};
+  ligacoesDoDiagrama(f.id).forEach(function(l){ saidas[l.de_etapa_id] = (saidas[l.de_etapa_id] || 0) + 1; });
+  var decisoes = Object.keys(saidas).filter(function(k){ return saidas[k] > 1; }).length;
+  $('admFluxoResumo').innerHTML =
+    '<div class="aviso" style="margin:0">' +
+      '<strong>' + etapas.length + '</strong> etapa(s), <strong>' + setas + '</strong> seta(s) e <strong>' +
+      decisoes + '</strong> decisão(ões). Em <strong>Editar no fluxo</strong>: arraste as etapas pelo ' +
+      'cabeçalho, use <strong>Editar</strong> numa etapa para nome, tipo, responsável e prazo, o ' +
+      '<strong>+</strong> da borda para desenhar uma saída, clique numa seta para mudar o texto ou apagá-la ' +
+      'e clique num losango para editar a decisão inteira.' +
+    '</div>';
 }
-
 /* ------------------ ADM: ligações do diagrama (as setas) ------------------ */
 var TIPOS_LIGACAO = { sequencia:'comum', padrao:'fluxo padrão', condicional:'condicional' };
 
-function renderAdmLigacoes(){
-  var f = admFunil();
-  $('admLigacoesBloco').hidden = !f;
-  if(!f) return;
-  var proprias = (S.admLigacoes || []);
-  var lista = proprias.length ? proprias.slice() : ligacoesDeduzidas(f.id);
-  lista.sort(function(a,b){ return num(a.ordem) - num(b.ordem); });
-
-  $('admLigacoesAviso').innerHTML = proprias.length
-    ? ''
-    : '<div class="aviso" style="margin:12px">Este funil ainda não tem setas próprias — o diagrama está ' +
-      'sendo deduzido da ordem das etapas e dos desvios. Clique em <strong>Gerar pela ordem</strong> ' +
-      'para transformar esse desenho em ligações editáveis, ou crie as suas em <strong>Nova ligação</strong>.</div>';
-
-  $('admLigacoesTbody').innerHTML = lista.length ? lista.map(function(l){
-    var ded = !l.id;
-    return '<tr' + (ded ? ' style="opacity:.6"' : '') + '>' +
-      '<td class="num">' + num(l.ordem) + '</td>' +
-      '<td><strong>' + esc(nomeEtapaQualquer(l.de_etapa_id)) + '</strong></td>' +
-      '<td><span class="seta-fluxo">&rarr;</span> ' + esc(nomeEtapaQualquer(l.para_etapa_id)) + '</td>' +
-      '<td>' + (l.rotulo ? esc(l.rotulo) : '<span style="color:var(--ink-3)">—</span>') + '</td>' +
-      '<td><span class="pill">' + esc(TIPOS_LIGACAO[l.tipo] || l.tipo) + '</span></td>' +
-      '<td class="acoes">' + (ded ? '<span style="color:var(--ink-3);font-size:11px">deduzida</span>'
-        : '<button class="btn sm" data-editlig="' + esc(l.id) + '">Editar</button>') + '</td>' +
-    '</tr>';
-  }).join('') : '<tr><td colspan="6" style="color:var(--ink-3);padding:18px">Nenhuma etapa para ligar ainda.</td></tr>';
-
-  Array.prototype.forEach.call($('admLigacoesTbody').querySelectorAll('[data-editlig]'), function(b){
-    b.addEventListener('click', function(){ abrirLigacaoForm(b.dataset.editlig); });
-  });
-  $('btnGerarLigacoes').hidden = !!proprias.length;
-}
-
+function renderAdmLigacoes(){ /* as setas agora são editadas no próprio fluxo */ }
 function preencherEtapasNoSelect(sel, valor){
   sel.innerHTML = '<option value="">—</option>' + (S.admEtapas || []).map(function(e){
     return '<option value="' + esc(e.id) + '"' + (e.id === valor ? ' selected' : '') + '>' +
@@ -5738,7 +5942,10 @@ function salvarFunil(){
     if(r.error) throw r.error;
     var novo = r.data[0];
     fechar('mdFunil');
-    return carregarAdmFunil(novo.id).then(function(){ renderAdm(); toast('Funil salvo'); });
+    return carregarAdmFunil(novo.id).then(function(){
+      renderAdm(); toast('Funil salvo');
+      if(!f) editarFluxo(novo.id);           /* funil novo: vai direto desenhar as etapas */
+    });
   }).catch(function(e){ erroSb(e, 'salvar funil'); });
 }
 
@@ -5837,9 +6044,6 @@ function abrirEtapaForm(id){
   $('fEtapaCor').value = e ? e.cor : (admFunil() || {}).cor || '#C8102E';
   $('fEtapaPrazo').value = e && e.prazo_dias ? e.prazo_dias : '';
   $('fEtapaRegras').value = e ? (e.regras || '') : '';
-  $('fEtapaSeta').value = e ? (e.seta_texto || '') : '';
-  preencherGateways($('fEtapaGwSaida'), e ? e.gateway_saida : 'exclusivo');
-  preencherGateways($('fEtapaGwEntrada'), e ? e.gateway_entrada : 'exclusivo');
   selectResponsavel($('fEtapaResp'), e ? (e.responsavel_nome || '') : '');
   $('fEtapaMovimento').value = (e && e.movimento) || 'manual';
   preencherRamoDe(e);
@@ -5880,9 +6084,6 @@ function salvarEtapa(){
     responsavel_email: conta ? conta.email : (S.edit.etapa && S.edit.etapa.responsavel_nome === resp
       ? S.edit.etapa.responsavel_email : null),
     regras: $('fEtapaRegras').value.trim() || null,
-    seta_texto: $('fEtapaSeta').value.trim() || null,
-    gateway_saida: $('fEtapaGwSaida').value || 'exclusivo',
-    gateway_entrada: $('fEtapaGwEntrada').value || 'exclusivo',
     ramo_de: $('fEtapaRamoDe').value || null,
     ramo_rotulo: $('fEtapaRamoDe').value ? ($('fEtapaRamoRotulo').value.trim() || null) : null,
     movimento: $('fEtapaMovimento').value,
@@ -6236,271 +6437,4 @@ function addAcao(a){
     var t = linha.querySelector('.tipo').value;
     linha.querySelector('.val-etapa').hidden  = t !== 'mover';
     linha.querySelector('.val-pessoa').hidden = t !== 'responsavel';
-    linha.querySelector('.val-texto').hidden  = t !== 'comentar';
-  }
-  linha.querySelector('.tipo').addEventListener('change', ajustar);
-  linha.querySelector('.x').addEventListener('click', function(){ linha.remove(); });
-  $('acaoLista').appendChild(linha);
-  ajustar();
-}
-
-function lerAcoes(){
-  return Array.prototype.map.call($('acaoLista').querySelectorAll('.acao-linha'), function(l){
-    var t = l.querySelector('.tipo').value;
-    if(t === 'mover')       return { acao:'mover', etapa_id: l.querySelector('.val-etapa').value };
-    if(t === 'responsavel') return { acao:'responsavel', valor: l.querySelector('.val-pessoa').value };
-    return { acao:'comentar', valor: l.querySelector('.val-texto').value };
-  }).filter(function(a){
-    return a.acao === 'mover' ? !!a.etapa_id : !!a.valor;
-  });
-}
-
-function abrirRegraForm(id){
-  if(!S.admFunilId){ toast('Escolha um funil primeiro.', true); return; }
-  if(!(S.admEtapas || []).length){ toast('Cadastre as etapas antes das condicionais.', true); return; }
-  var r = id ? (S.admRegras || []).filter(function(x){ return x.id === id; })[0] : null;
-  S.edit.regra = r || null;
-  $('mdRegraTit').textContent = r ? 'Editar automação' : 'Nova automação';
-  $('fRegraNome').value = r ? r.nome : '';
-  $('fRegraGatilho').value = r ? r.gatilho : 'salvar';
-  $('fRegraPrazo').value = r && r.prazo_dias ? r.prazo_dias : '';
-  $('fRegraLogica').value = r ? r.logica : 'E';
-  $('fRegraAtivo').checked = r ? r.ativo : true;
-  opcoesEtapas($('fRegraOrigem'), r ? (r.etapa_origem_id || '') : '', true);
-  $('condLista').innerHTML = '';
-  ((r && r.condicoes) || []).forEach(addCondicao);
-  if(!r) addCondicao();
-  $('acaoLista').innerHTML = '';
-  acoesDaRegra(r || {}).forEach(addAcao);
-  if(!r) addAcao({ acao:'mover', etapa_id: (S.admEtapas[1] || S.admEtapas[0] || {}).id });
-  gatilhoMudou();
-  $('btnExcluirRegra').hidden = !r;
-  abrir('mdRegra');
-}
-
-function salvarRegra(){
-  var nome = $('fRegraNome').value.trim();
-  if(!nome){ toast('Dê um nome à automação.', true); return; }
-  var gatilho = $('fRegraGatilho').value;
-  var conds = lerCondicoes().filter(function(c){ return c.campo; });
-  if(!conds.length && gatilho !== 'entrada' && gatilho !== 'prazo'){
-    toast('Adicione ao menos uma condição.', true); return;
-  }
-  var acoes = lerAcoes();
-  if(!acoes.length){ toast('Adicione ao menos uma ação.', true); return; }
-  var origem = $('fRegraOrigem').value || null;
-  var mover = acoes.filter(function(a){ return a.acao === 'mover'; })[0];
-  if(origem && mover && origem === mover.etapa_id){
-    toast('Origem e destino não podem ser a mesma etapa.', true); return;
-  }
-
-  var reg = {
-    funil_id: S.admFunilId, nome: nome,
-    etapa_origem_id: origem,
-    etapa_destino_id: mover ? mover.etapa_id : null,
-    acoes: acoes,
-    prazo_dias: gatilho === 'prazo' && $('fRegraPrazo').value !== ''
-      ? parseInt($('fRegraPrazo').value, 10) : null,
-    logica: $('fRegraLogica').value, condicoes: conds,
-    gatilho: gatilho, ativo: $('fRegraAtivo').checked,
-    ordem: S.edit.regra ? S.edit.regra.ordem : (S.admRegras || []).length
-  };
-  var r = S.edit.regra;
-  var p = r ? sb.from(T.regras).update(reg).eq('id', r.id)
-            : sb.from(T.regras).insert(reg);
-  p.then(function(res){
-    if(res.error) throw res.error;
-    fechar('mdRegra');
-    return carregarAdmFunil(S.admFunilId);
-  }).then(function(){
-    renderAdm();
-  }).then(function(){ toast('Condicional salva'); })
-   .catch(function(e){ erroSb(e, 'salvar condicional'); });
-}
-
-function excluirRegra(){
-  var r = S.edit.regra;
-  if(!r) return;
-  if(!confirm('Excluir a condicional "' + r.nome + '"?')) return;
-  sb.from(T.regras).delete().eq('id', r.id).then(function(res){
-    if(res.error) throw res.error;
-    fechar('mdRegra');
-    return carregarAdmFunil(S.admFunilId);
-  }).then(function(){
-    renderAdm();
-  }).then(function(){ toast('Condicional excluída'); })
-   .catch(function(e){ erroSb(e, 'excluir condicional'); });
-}
-
-/* ---- acesso: pessoas do hub e limpeza de responsáveis antigos ---- */
-function foraDoHub(){
-  var cards = S.cardsTodos.filter(function(c){ return c.responsavel_nome && !doHub(c.responsavel_nome); });
-  var etapas = S.etapasTodas.filter(function(e){ return e.responsavel_nome && !doHub(e.responsavel_nome); });
-  return { cards: cards, etapas: etapas };
-}
-
-function limparForaDoHub(){
-  var fora = foraDoHub();
-  if(!fora.cards.length){ toast('Nenhum card com responsável fora do hub'); return; }
-  if(!confirm(fora.cards.length + ' card(s) estão com responsável que não é conta da Central de Acesso ' +
-              '(normalmente o vendedor que lançou o pedido). Limpar esse campo nesses cards?')) return;
-  Promise.all(fora.cards.map(function(c){
-    return sb.from(T.cards)
-      .update({ responsavel_nome: null, responsavel_email: null, atualizado_em: agora() })
-      .eq('id', c.id);
-  })).then(function(){ return carregarTudo(); })
-    .then(function(){ renderAdm(); toast(fora.cards.length + ' card(s) sem responsável — reatribua pelo hub'); })
-    .catch(function(e){ erroSb(e, 'limpar responsáveis'); });
-}
-
-function renderContas(){
-  var box = $('listaContas');
-  if(!box) return;
-  if(!S.contas.length){
-    box.innerHTML = '<div class="ajuda" style="color:var(--ink-3)">Lista indisponível — abra a Central de Acesso para administrar as pessoas.</div>';
-    return;
-  }
-  var niveis = { admin:'acesso total', usuario:'edição', consulta:'somente leitura' };
-  var fora = foraDoHub();
-  box.innerHTML =
-    (fora.cards.length || fora.etapas.length
-      ? '<div class="aviso erro" style="margin-bottom:12px">' +
-        'Só contas da Central de Acesso podem ser agentes do funil. ' +
-        (fora.cards.length ? '<strong>' + fora.cards.length + '</strong> card(s) ainda estão com um nome de fora ' +
-          '(vendedor do formulário, por exemplo). ' : '') +
-        (fora.etapas.length ? '<strong>' + fora.etapas.length + '</strong> etapa(s) também — corrija em Funis e etapas. ' : '') +
-        (fora.cards.length ? '<button class="btn sm" style="margin-top:8px" onclick="limparForaDoHub()">' +
-          'Limpar responsável desses cards</button>' : '') +
-        '</div>'
-      : '') +
-    '<table class="tab"><thead><tr><th>Pessoa</th><th>E-mail</th><th>Nível no hub</th></tr></thead><tbody>' +
-    S.contas.map(function(c){
-      return '<tr><td><strong>' + esc(c.nome || '') + '</strong></td><td>' + esc(c.email) + '</td>' +
-             '<td><span class="pill">' + esc(niveis[c.nivel] || c.nivel) + '</span></td></tr>';
-    }).join('') + '</tbody></table>';
-}
-
-/* --------------------------------------------------------------- inicio */
-function iniciar(){
-  sb = APP.sb;
-  aplicarTema(temaSalvo());
-  var rot = { admin:'Acesso total', editar:'Edição', ver:'Somente leitura' };
-  $('infoPerm').textContent = rot[APP.permissao] || '';
-  $('linkHub').href = APP.hub;
-  if(eAdmin()){
-    $('tabAdm').hidden = false;
-    $('btnNovoFunilAtalho').hidden = false;
-  }
-  carregarContas().then(carregarTudo);
-  ligarSyncAutomatico();
-
-  document.addEventListener('keydown', function(ev){
-    if(ev.key !== 'Escape') return;
-    if(document.querySelector('.modal.on')){
-      ['mdFunil','mdEtapa','mdCampo','mdRegra','mdCard','mdLigacao'].forEach(fechar);
-    } else if(S.menuGateway){ fecharMenuGateway(); }
-    else if(S.consultaFluxo){ fecharConsultaFluxo(); }
-    else if(S.painelEtapa){ fecharPainelEtapa(); }
-    else if(S.rascunho || S.ligando){ cancelarRascunho(); }
-    else if(S.organizando){ alternarOrganizar(); }
-  });
-  var eraMovel = ehMovel();
-  window.addEventListener('resize', function(){
-    ajustarTopoFlutuante();
-    if(ehMovel() !== eraMovel){ eraMovel = ehMovel(); renderKanban(); }
-  });
-  setTimeout(ajustarTopoFlutuante, 400);   /* a barra do hub pode entrar depois */
-  document.addEventListener('click', function(){ if(S.menuGateway) fecharMenuGateway(); });
-  Array.prototype.forEach.call(document.querySelectorAll('.modal'), function(m){
-    m.addEventListener('click', function(ev){ if(ev.target === m) m.classList.remove('on'); });
-  });
-}
-
-/* funcoes usadas pelos atributos onclick do HTML */
-window.abrirConsultaFluxo = abrirConsultaFluxo;
-window.fecharConsultaFluxo = fecharConsultaFluxo;
-window.alternarOrganizar = alternarOrganizar;
-window.arrumarSozinho = arrumarSozinho;
-window.salvarPosicoes = salvarPosicoes;
-window.alternarLigar = alternarLigar;
-window.abrirMenuGateway = abrirMenuGateway;
-window.fecharMenuGateway = fecharMenuGateway;
-window.comecarSaida = comecarSaida;
-window.cancelarRascunho = cancelarRascunho;
-window.confirmarRascunho = confirmarRascunho;
-window.novaEtapaNoFluxo = novaEtapaNoFluxo;
-window.novaEtapaNoFim = novaEtapaNoFim;
-window.apagarLigacao = apagarLigacao;
-window.abrirLigacaoForm = abrirLigacaoForm;
-window.salvarLigacao = salvarLigacao;
-window.excluirLigacao = excluirLigacao;
-window.gerarLigacoesPelaOrdem = gerarLigacoesPelaOrdem;
-window.verTodos = verTodos;
-window.escreverNaSeta = escreverNaSeta;
-window.fecharPainelEtapa = fecharPainelEtapa;
-window.irPara = irPara;
-window.admAba = admAba;
-window.admTrocarFunil = admTrocarFunil;
-window.carregarTudo = carregarTudo;
-window.carregarContas = carregarContas;
-window.limparForaDoHub = limparForaDoHub;
-window.limparSelecao = limparSelecao;
-window.movimentoMudou = movimentoMudou;
-window.quemAssinaMudou = quemAssinaMudou;
-window.ramoMudou = ramoMudou;
-window.gatilhoMudou = gatilhoMudou;
-window.addAcao = addAcao;
-window.excluirSelecionados = excluirSelecionados;
-window.renderKanban = renderKanban;
-window.buscar = buscar;
-window.toggleBuscaMovel = toggleBuscaMovel;
-window.voltarAosFunis = voltarAosFunis;
-window.liberarCard = liberarCard;
-window.aprovacaoPendente = aprovacaoPendente;
-window.escolherEtapaMovel = escolherEtapaMovel;
-window.trocarUsuarioVirtual = trocarUsuarioVirtual;
-window.trocarTema = trocarTema;
-window.moverSelecionados = moverSelecionados;
-window.rodarRegrasManual = rodarRegrasManual;
-window.sincronizar = sincronizar;
-window.novoCard = novoCard;
-window.abrirFunilForm = abrirFunilForm;
-window.salvarFunil = salvarFunil;
-window.excluirFunil = excluirFunil;
-window.abrirEtapaForm = abrirEtapaForm;
-window.salvarEtapa = salvarEtapa
-window.excluirEtapa = excluirEtapa;
-window.duplicarEtapa = duplicarEtapa;
-window.duplicarEtapaAtual = duplicarEtapaAtual;
-window.abrirCampoForm = abrirCampoForm;
-window.salvarCampo = salvarCampo;
-window.excluirCampo = excluirCampo;
-window.sugerirChave = sugerirChave;
-window.toggleOpcoes = toggleOpcoes;
-window.origemFonteMudou = origemFonteMudou;
-window.salvarOrigem = salvarOrigem;
-window.carregarCamposDaFonte = carregarCamposDaFonte;
-window.abrirRegraForm = abrirRegraForm;
-window.salvarRegra = salvarRegra;
-window.excluirRegra = excluirRegra;
-window.addCondicao = addCondicao;
-window.abrirCardForm = abrirCardForm;
-window.salvarCard = salvarCard;
-window.excluirCard = excluirCard;
-window.aplicarEtapaResp = aplicarEtapaResp;
-window.comentarCard = comentarCard;
-window.fechar = fechar;
-/* expostos para teste do motor de condicionais */
-window.__motor = { testarCondicao: testarCondicao, regraBate: regraBate, valorDoCard: valorDoCard };
-
-if(window.APP && APP.pronto){
-  APP.pronto.then(iniciar).catch(function(){ /* guard ja mostrou o aviso */ });
-} else {
-  document.addEventListener('DOMContentLoaded', function(){
-    document.body.innerHTML = '<div class="vazio-geral">Esta página precisa da Central de Acesso para funcionar.</div>';
-  });
-}
-})();
-</script>
-</body>
-</html>
+    linha.querySelect
