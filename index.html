@@ -211,6 +211,17 @@ button,input,select,textarea{font-family:inherit;font-size:13px;color:inherit}
 
 /* ---------- abas adm ---------- */
 .subnav{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px}
+/* ferramentas do funil: tudo que era administração, aberto a partir do próprio funil */
+.ferr-abas{display:flex;gap:4px;padding:10px 18px 0;border-bottom:1px solid var(--line);
+  background:var(--card);flex-wrap:wrap}
+.ferr-abas button{background:transparent;border:0;border-bottom:3px solid transparent;margin-bottom:-1px;
+  padding:8px 12px;font-family:inherit;font-size:12px;font-weight:700;color:var(--ink-2);cursor:pointer}
+.ferr-abas button:hover{color:var(--wine)}
+.ferr-abas button.on{color:var(--wine);border-bottom-color:var(--wine)}
+.ferr-corpo{background:var(--bg)}
+.ferr-corpo .bloco:last-child{margin-bottom:0}
+.ferr-corpo #selFunilCampos,.ferr-corpo #selFunilRegras{display:none}
+.ferr-acoes{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .subnav button{background:var(--card);border:1px solid var(--line);border-radius:999px;
   padding:6px 14px;font-size:11.5px;font-weight:700;cursor:pointer;color:var(--ink-2)}
 .subnav button.on{background:var(--wine);border-color:var(--wine);color:var(--wine-txt)}
@@ -624,6 +635,26 @@ a.kc-btn{text-decoration:none}
   border-radius:6px;padding:2px 8px;font-size:10.5px;font-weight:700;line-height:1.5;font-family:inherit;cursor:pointer}
 .no-editar:hover{border-color:var(--wine);color:var(--wine)}
 .fluxo-svg .timer{fill:var(--card);stroke:var(--ink-2);stroke-width:1.6}
+.fluxo-svg .mov-g{--mc:var(--ink-2)}
+.fluxo-svg .mov-g.m-resp{--mc:var(--wine)}
+.fluxo-svg .mov-g.m-assin{--mc:var(--s2)}
+.fluxo-svg .mov-g.m-auto{--mc:var(--s3)}
+.fluxo-svg .mov-circ{fill:var(--card);stroke:var(--mc);stroke-width:1.8}
+.fluxo-svg .mov-ico path,.fluxo-svg .mov-ico circle{fill:none;stroke:var(--mc);stroke-width:1.6;
+  stroke-linecap:round;stroke-linejoin:round}
+.fluxo-svg .mov-fundo{fill:var(--card);stroke:var(--mc);stroke-width:1;opacity:.95}
+.fluxo-svg .mov-txt{font:700 9.5px "Archivo",sans-serif;fill:var(--mc)}
+.fluxo-svg .mov-g.editavel{cursor:pointer}
+.fluxo-svg .mov-g.editavel:hover .mov-fundo{fill:var(--chip)}
+.mov-svg{display:block;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.mov-svg circle,.mov-svg path{fill:none}
+.mov-svg.m-resp{color:var(--wine)} .mov-svg.m-assin{color:var(--s2)} .mov-svg.m-auto{color:var(--s3)}
+.mov-prev{display:inline-flex;align-items:center;gap:6px;margin-left:8px;padding:2px 9px 2px 6px;
+  border:1px solid var(--line);border-radius:999px;background:var(--card);text-transform:none;
+  letter-spacing:0;font-size:11px;font-weight:700;color:var(--ink-2);vertical-align:middle}
+.mov-legenda{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.mov-legenda span{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-2);
+  border:1px solid var(--line-2);border-radius:999px;padding:2px 9px 2px 6px;background:var(--sunk)}
 .fluxo-svg .timer-mao{stroke:var(--ink-2);stroke-width:1.4;stroke-linecap:round;fill:none}
 .fluxo-svg .prazo{stroke:var(--ink-3);stroke-width:1.6;stroke-dasharray:4 3;fill:none}
 .fluxo-svg .default-traco{stroke:var(--wine-soft);stroke-width:2;fill:none}
@@ -938,7 +969,7 @@ body.com-painel .barra-selecao{right:400px}
       <span id="temaIco">&#9681;</span><span id="temaTxt">Sistema</span>
     </button>
   </div>
-  <nav class="nav">
+  <nav class="nav" hidden>
     <button id="tabFunis" class="on" onclick="irPara('funis')">Funis</button>
     <button id="tabAdm" hidden onclick="irPara('adm')">Administração</button>
   </nav>
@@ -973,7 +1004,7 @@ body.com-painel .barra-selecao{right:400px}
         <span class="dica" id="dicaFunis"></span>
         <div style="margin-left:auto;display:flex;gap:8px">
           <button class="btn sm" onclick="carregarTudo()">Atualizar</button>
-          <button class="btn sm pri" id="btnNovoFunilAtalho" hidden onclick="irPara('adm');admAba('funis');abrirFunilForm()">Novo funil</button>
+          <button class="btn sm pri" id="btnNovoFunilAtalho" hidden onclick="abrirFunilForm()">Novo funil</button>
         </div>
       </div>
       <div class="corpo">
@@ -989,6 +1020,8 @@ body.com-painel .barra-selecao{right:400px}
           <input id="buscaCard" class="busca" type="text" placeholder="Buscar card…" oninput="buscar(this.value)">
           <button class="btn sm" id="btnSincronizar" hidden onclick="sincronizar(false)">Sincronizar</button>
           <button class="btn sm" id="btnRegrasManual" onclick="rodarRegrasManual()">Rodar automações</button>
+          <button class="btn sm" id="btnFerramentas" hidden onclick="abrirFerramenta('funil')"
+                  title="Configuração do funil, campos do card, automações e acesso">Ferramentas</button>
           <button class="btn sm" id="btnOrganizar" hidden onclick="alternarOrganizar()">Editar fluxo</button>
           <button class="btn sm pri" id="btnNovoCard" onclick="novoCard()">Novo card</button>
         </div>
@@ -1163,6 +1196,20 @@ body.com-painel .barra-selecao{right:400px}
 
 <!-- ================================ MODAIS ================================ -->
 
+<div class="modal" id="mdFerramenta"><div class="modal-box xl">
+  <div class="modal-cab"><h3 id="mdFerramentaTit">Ferramentas do funil</h3>
+    <button class="x" onclick="fechar('mdFerramenta')" title="Fechar">&times;</button></div>
+  <div class="ferr-abas" role="tablist">
+    <button id="ferr-funil"   class="on" role="tab" onclick="ferrAba('funil')">Funil</button>
+    <button id="ferr-campos"  role="tab" onclick="ferrAba('campos')">Campos do card</button>
+    <button id="ferr-regras"  role="tab" onclick="ferrAba('regras')">Automações</button>
+    <button id="ferr-acesso"  role="tab" onclick="ferrAba('acesso')">Acesso</button>
+  </div>
+  <div class="modal-corpo ferr-corpo" id="ferrCorpo">
+    <div id="ferr-sec-funil"></div>
+  </div>
+</div></div>
+
 <div class="modal" id="mdFunil"><div class="modal-box">
   <div class="modal-cab"><h3 id="mdFunilTit">Novo funil</h3>
     <button class="x" onclick="fechar('mdFunil')">&times;</button></div>
@@ -1289,18 +1336,19 @@ body.com-painel .barra-selecao{right:400px}
     <div class="campo" style="margin-bottom:6px"><label>Como o card sai desta etapa</label>
       <span class="ajuda">É isso que define o único botão do rodapé do card.</span></div>
     <div class="linha">
-      <div class="campo" style="flex:2"><label>Movimentação</label>
+      <div class="campo" style="flex:2"><label>Movimentação <span class="mov-prev" id="fEtapaMovIco"></span></label>
         <select id="fEtapaMovimento" onchange="movimentoMudou()">
-          <option value="manual">Manual — qualquer um com permissão libera</option>
-          <option value="responsavel">Manual — só o responsável da etapa libera</option>
-          <option value="assinatura">Assinatura no formulário de origem</option>
-          <option value="automatico">Automática — só as condicionais movem</option>
-        </select></div>
+          <option value="manual">Arrastar card — qualquer um com permissão libera</option>
+          <option value="responsavel">Só o responsável — só quem responde pela etapa libera</option>
+          <option value="assinatura">Assinatura — sai quando assinam no formulário de origem</option>
+          <option value="automatico">Automação — só as automações movem</option>
+        </select>
+        <div class="mov-legenda" id="fEtapaMovLegenda" aria-label="Ícones de cada modo"></div></div>
     </div>
     <div id="boxAssinatura" hidden>
       <div class="linha">
         <div class="campo"><label>Qual assinatura</label>
-          <select id="fEtapaAssinatura"></select>
+          <select id="fEtapaAssinatura" onchange="movimentoMudou()"></select>
           <span class="ajuda" id="ajudaAssinatura"></span></div>
         <div class="campo"><label>Quem assina</label>
           <select id="fEtapaQuemAssina" onchange="quemAssinaMudou()">
@@ -1694,7 +1742,8 @@ function trocarTema(){
 
 /* ------------------------------------------------------------- navegacao */
 function irPara(v){
-  var adm = v === 'adm';
+  if(v === 'adm'){ abrirFerramenta('funil'); v = 'funis'; }
+  var adm = false;
   $('viewFunis').hidden = adm;
   $('viewAdm').hidden = !adm;
   $('tabFunis').classList.toggle('on', !adm);
@@ -1705,6 +1754,66 @@ function irPara(v){
     else renderAdm();
   }
   window.scrollTo(0,0);
+}
+/* ------------------------------ ferramentas do funil ------------------------------
+   Tudo que era a aba Administração agora abre a partir do funil aberto, só para
+   quem tem acesso total. Etapas, setas e decisões ficam no próprio desenho. */
+var FERR_ABAS = { funil:'Funil', campos:'Campos do card', regras:'Automações', acesso:'Acesso' };
+function montarFerramentas(){
+  var corpo = $('ferrCorpo');
+  if(!corpo || corpo.dataset.montado) return;
+  ['campos','regras','acesso'].forEach(function(a){
+    var sec = $('adm-' + a);
+    if(sec) corpo.appendChild(sec);       /* as mesmas telas, agora dentro do funil */
+  });
+  corpo.dataset.montado = '1';
+}
+function abrirFerramenta(aba){
+  if(!eAdmin()) return;
+  var fid = (S.funil && S.funil.id) || S.admFunilId || (S.funis[0] && S.funis[0].id);
+  if(!fid){ abrirFunilForm(); return; }
+  montarFerramentas();
+  carregarAdmFunil(fid).then(function(){
+    renderAdm();
+    ferrAba(aba || 'funil');
+    abrir('mdFerramenta');
+  });
+}
+function ferrAba(aba){
+  montarFerramentas();
+  Object.keys(FERR_ABAS).forEach(function(a){
+    var sec = a === 'funil' ? $('ferr-sec-funil') : $('adm-' + a);
+    if(sec) sec.hidden = a !== aba;
+    var b = $('ferr-' + a);
+    if(b){ b.classList.toggle('on', a === aba); b.setAttribute('aria-selected', a === aba ? 'true' : 'false'); }
+  });
+  var f = admFunil();
+  $('mdFerramentaTit').textContent = 'Ferramentas · ' + (f ? f.nome : 'funil');
+  if(aba === 'funil') renderFerrFunil();
+}
+function renderFerrFunil(){
+  var f = admFunil(), box = $('ferr-sec-funil');
+  if(!box) return;
+  if(!f){ box.innerHTML = '<div class="vazio-geral">Nenhum funil aberto.</div>'; return; }
+  var c = S.contagem[f.id] || { etapas:0, cards:0 };
+  var fx = Object.assign({}, FLUXO_PADRAO, f.fluxo || {});
+  box.innerHTML =
+    '<div class="bloco"><div class="cab"><h2>' + esc(f.nome) + '</h2>' +
+      '<span class="dica">' + (f.ativo ? 'ativo' : 'inativo') + ' · ' + c.etapas + ' etapa(s) · ' + c.cards + ' card(s)</span></div>' +
+    '<div class="corpo">' +
+      (f.descricao ? '<p style="margin:0 0 10px;color:var(--ink-2)">' + esc(f.descricao) + '</p>' : '') +
+      '<div class="campo" style="margin-bottom:6px"><label>Como o card anda neste funil</label></div>' +
+      '<div class="fluxo-resumo">' + resumoFluxo(fx).map(function(t){
+        return '<span class="p">' + esc(t) + '</span>'; }).join('') + '</div>' +
+      '<div class="ferr-acoes">' +
+        '<button class="btn pri" onclick="configurarFunilAtual()">Configurar funil</button>' +
+        '<button class="btn" onclick="editarFluxoAtual()">Editar etapas e setas no fluxo</button>' +
+        '<button class="btn" onclick="abrirFunilForm()">Novo funil</button>' +
+      '</div>' +
+      '<div class="aviso" style="margin:14px 0 0">Nome, descrição, cor, se o funil está ativo e as regras de ' +
+        'avançar e voltar ficam em <strong>Configurar funil</strong>, onde também dá para excluí-lo. ' +
+        'A ordem dos funis se ajusta arrastando os cartões no topo da página.</div>' +
+    '</div></div>';
 }
 function admAba(aba){
   ['funis','campos','regras','acesso'].forEach(function(a){
@@ -1930,7 +2039,7 @@ function novoCard(){
     window.open(f.form_url, '_blank', 'noopener');
     toast('Preencha o formulário e depois use “Sincronizar”.');
   } else {
-    toast('Cadastre o link do formulário em Administração › Origem do card.', true);
+    toast('Cadastre o link do formulário em Ferramentas › Campos do card.', true);
   }
 }
 
@@ -2093,7 +2202,7 @@ function renderMenuFunis(){
     : '';
   if(!visiveis.length){
     box.innerHTML = '<div class="vazio-geral">Nenhum funil cadastrado ainda.' +
-      (eAdmin() ? ' Crie o primeiro em <strong>Administração</strong>.' : ' Peça a um administrador para criar.') +
+      (eAdmin() ? ' Crie o primeiro em <strong>Novo funil</strong>.' : ' Peça a um administrador para criar.') +
       '</div>';
     return;
   }
@@ -2400,6 +2509,7 @@ function renderVirtual(){
   $('btnNovoCard').hidden = true;
   $('btnSincronizar').hidden = true;
   $('btnRegrasManual').hidden = true;
+  $('btnFerramentas').hidden = true;
   $('avisoFonte').innerHTML = '';
 
   var colunas = colunasVirtuais();
@@ -2606,7 +2716,44 @@ var MARCADORES = {
   manual:  '<svg viewBox="0 0 16 16"><path d="M2 13.6l.9-2.9L10.4 3.2l2 2L4.9 12.7 2 13.6z"></path>' +
            '<path d="M9.3 4.3l2 2"></path></svg>'
 };
+/* ---- como o card sai da etapa: um ícone para cada modo, igual no mapa e no formulário ---- */
+var MODOS_SAIDA = {
+  manual: { nome:'arrastar card', cls:'m-manual',
+    titulo:'Sai arrastando o card ou pelo botão Liberar: qualquer pessoa com permissão',
+    ico:'<path d="M8 1.5v13M1.5 8h13M8 1.5L6 3.5M8 1.5l2 2M8 14.5l-2-2M8 14.5l2-2M1.5 8l2-2M1.5 8l2 2M14.5 8l-2-2M14.5 8l-2 2"></path>' },
+  responsavel: { nome:'só o responsável', cls:'m-resp',
+    titulo:'Sai pelo botão Liberar, mas só o responsável da etapa pode liberar',
+    ico:'<circle cx="8" cy="5" r="2.6"></circle><path d="M2.6 14.2c0-3 2.4-5 5.4-5s5.4 2 5.4 5"></path>' },
+  /* assinatura usa a mesma figura de pessoa: sempre há alguém que assina */
+  assinatura: { nome:'assinatura', cls:'m-resp',
+    titulo:'Sai quando a assinatura é feita no formulário de origem',
+    ico:'<circle cx="8" cy="5" r="2.6"></circle><path d="M2.6 14.2c0-3 2.4-5 5.4-5s5.4 2 5.4 5"></path>' },
+  automatico: { nome:'automação', cls:'m-auto',
+    titulo:'Sai sozinho, pelas automações do funil',
+    ico:'<path d="M9.2 1.2L3.4 9h4.1l-1 5.8L12.6 7H8.4z"></path>' }
+};
+function modoSaida(e){
+  var mv = (e && e.movimento) || 'manual';
+  var m = Object.assign({}, MODOS_SAIDA[mv] || MODOS_SAIDA.manual);
+  if(mv === 'assinatura'){
+    var a = assinaturaDaEtapa(e);
+    var fun = funilPor(e.funil_id);
+    var lista = assinaturasDaFonte(fun && fun.fonte);
+    var i = a ? lista.indexOf(a) : -1;
+    m.nome = i >= 0 ? 'assinatura ' + (i + 1) + '/' + lista.length : 'assinatura';
+    if(a) m.titulo = 'Sai com a ' + a.rotulo + ' — assina ' + quemAssinaTexto(e);
+  }
+  return m;
+}
+function icoModo(m, tam){
+  return '<svg viewBox="0 0 16 16" width="' + (tam || 15) + '" height="' + (tam || 15) + '" class="mov-svg ' + m.cls + '">' +
+    m.ico + '</svg>';
+}
 function marcadorDaEtapa(e){
+  var m = modoSaida(e);
+  return { svg: icoModo(m), titulo: 'Como o card sai: ' + m.nome + '. ' + m.titulo };
+}
+function marcadorDaEtapaAntigo(e){
   var mv = (e && e.movimento) || 'manual';
   if(mv === 'automatico') return { svg: MARCADORES.servico, titulo: 'Tarefa de serviço — anda sozinha pelas condicionais' };
   if(mv === 'assinatura') return { svg: MARCADORES.manual,  titulo: 'Tarefa manual — sai por assinatura no formulário' };
@@ -2641,7 +2788,7 @@ function cx(b){ return b.x + b.w / 2; }
 
 /* monta eventos, gateways e setas a partir dos retângulos e das ligações */
 function figurasBPMN(fid, r, extras){
-  var fig = { eventos:[], gateways:[], setas:[], timers:[] };
+  var fig = { eventos:[], gateways:[], setas:[], timers:[], modos:[] };
   var etapas = etapasDoFunil(fid).filter(function(e){ return r[e.id]; });
   if(!etapas.length) return fig;
   /* extras = a seta ainda pontilhada que o admin está desenhando */
@@ -2649,6 +2796,11 @@ function figurasBPMN(fid, r, extras){
     return r[l.de_etapa_id] && r[l.para_etapa_id];
   });
 
+  /* selo de saída: como o card deixa a etapa */
+  etapas.forEach(function(E){
+    var a = r[E.id];
+    fig.modos.push({ x:a.x + 30, y:a.y + a.h, modo:modoSaida(E), etapa:E.id });
+  });
   /* evento de borda de tempo, em qualquer etapa com prazo */
   etapas.forEach(function(E){
     var a = r[E.id], pz = prazoDaEtapa(E);
@@ -3077,6 +3229,20 @@ function svgGateway(g){
     marcaGateway(tipo, g.x, g.y) +
   '</g>';
 }
+function svgModo(m){
+  var md = m.modo, txt = md.nome;
+  var larg = Math.max(34, txt.length * 5.6 + 14);
+  var lx = m.x + TIMER_R + 4;
+  var editavel = S.organizando && eAdmin();
+  return '<g class="mov-g ' + md.cls + (editavel ? ' editavel' : '') + '"' +
+      (editavel ? ' data-mov-etapa="' + esc(m.etapa) + '"' : '') + '>' +
+    '<title>' + esc(md.titulo) + (editavel ? ' (clique para mudar)' : '') + '</title>' +
+    '<rect class="mov-fundo" x="' + lx + '" y="' + (m.y - 9) + '" width="' + larg + '" height="18" rx="9"></rect>' +
+    '<text class="mov-txt" x="' + (lx + larg / 2 + 3) + '" y="' + (m.y + 3.5) + '" text-anchor="middle">' + esc(txt) + '</text>' +
+    '<circle class="mov-circ" cx="' + m.x + '" cy="' + m.y + '" r="' + TIMER_R + '"></circle>' +
+    '<g transform="translate(' + (m.x - 7) + ',' + (m.y - 7) + ') scale(.875)" class="mov-ico">' + md.ico + '</g>' +
+  '</g>';
+}
 function svgTimer(t){
   return '<circle class="timer" cx="' + t.x + '" cy="' + t.y + '" r="' + TIMER_R + '"></circle>' +
     '<circle class="timer" cx="' + t.x + '" cy="' + t.y + '" r="' + (TIMER_R - 3.5) + '"></circle>' +
@@ -3420,7 +3586,7 @@ function desenharLigacoes(){
       return '<path class="seta-hit" d="' + rotaD(s._pts, 14) + '" data-seta-de="' + esc(s.de) +
              '" data-seta-para="' + esc(s.para) + '"><title>Clique para editar ou apagar esta seta</title></path>';
     }).join('') : '') +
-    fig.timers.map(svgTimer).join('') + rotulos;
+    fig.modos.map(svgModo).join('') + fig.timers.map(svgTimer).join('') + rotulos;
 }
 var _quadroDesenho = 0;
 function agendarDesenho(){
@@ -4006,6 +4172,13 @@ function ligarRotulosDeSeta(){
     });
   });
   if(!S.organizando) return;
+  Array.prototype.forEach.call(tela.querySelectorAll('[data-mov-etapa]'), function(g){
+    g.style.pointerEvents = 'auto';
+    g.addEventListener('click', function(ev){
+      ev.stopPropagation();
+      editarEtapaNoMapa(g.getAttribute('data-mov-etapa'));
+    });
+  });
   Array.prototype.forEach.call(tela.querySelectorAll('[data-seta-de]'), function(g){
     g.style.pointerEvents = g.tagName.toLowerCase() === 'path' ? 'stroke' : 'auto';
     g.addEventListener('click', function(ev){
@@ -4458,6 +4631,7 @@ function renderKanbanBase(){
   $('btnNovoCard').hidden = !podeEditar() || !S.etapas.length;
   $('btnSincronizar').hidden = f.fonte === 'manual' || !podeEditar();
   $('btnRegrasManual').hidden = false;
+  $('btnFerramentas').hidden = !eAdmin();
 
   var fo = cat(f.fonte);
   $('avisoFonte').innerHTML = fo
@@ -4793,14 +4967,14 @@ function acoesCardHTML(c, etapa){
 
   if(mov === 'assinatura'){
     var est = estadoAssinatura(c, etapa);
-    if(!est) return selo('assinatura não definida', 'Escolha a assinatura em Administração › Funis e etapas');
+    if(!est) return selo('assinatura não definida', 'Escolha a assinatura no Editar da etapa, em Editar fluxo');
     if(est.recusada) return selo('&#10007; ' + esc(est.rotulo) + ' — recusada',
                                  'O formulário registrou recusa nesta assinatura');
     if(est.assinada) return selo('&#10003; ' + esc(est.rotulo),
                                  'Assinado' + (est.por ? ' por ' + est.por : '') +
                                  (est.em ? ' em ' + dataBR(est.em) : '') + ' — o card sai pela condicional');
     var link = linkOrigem(c);
-    if(!link) return selo('&#9873; ' + esc(est.rotulo), 'Cadastre o link do formulário em ADM › Origem do card');
+    if(!link) return selo('&#9873; ' + esc(est.rotulo), 'Cadastre o link do formulário em Ferramentas › Campos do card');
     var meuTurno = souOAssinador(etapa) ? ' meu' : '';
     return caixa('<a class="kc-btn liberar' + meuTurno + '" data-assinar="1" href="' + esc(link) + '" ' +
       'target="_blank" rel="noopener" title="Assina: ' + esc(quemAssinaTexto(etapa)) + '">' +
@@ -5445,7 +5619,7 @@ function abrirCardForm(id){
       (camposF.length
         ? camposF.map(function(f){ return campoFormHTML(f, card ? (card.dados||{})[f.chave] : undefined); }).join('')
         : '<div class="aviso">Este funil não tem campos cadastrados.' +
-          (eAdmin() ? ' Cadastre em <strong>Administração › Origem do card</strong>.' : '') + '</div>');
+          (eAdmin() ? ' Cadastre em <strong>Ferramentas › Campos do card</strong>.' : '') + '</div>');
   } else {
     $('cardDados').innerHTML = card ? dadosOrigemHTML(card)
       : '<div class="aviso">O card deste funil nasce no formulário de origem. Use “Abrir formulário”.</div>';
@@ -6006,7 +6180,7 @@ function salvarFunil(){
     var novo = r.data[0];
     fechar('mdFunil');
     return carregarAdmFunil(novo.id).then(function(){
-      renderAdm(); toast('Funil salvo');
+      renderAdm(); renderFerrFunil(); toast('Funil salvo');
       if(!f) editarFluxo(novo.id);           /* funil novo: vai direto desenhar as etapas */
     });
   }).catch(function(e){ erroSb(e, 'salvar funil'); });
@@ -6019,6 +6193,7 @@ function excluirFunil(){
   sb.from(T.funis).delete().eq('id', f.id).then(function(r){
     if(r.error) throw r.error;
     fechar('mdFunil');
+    fechar('mdFerramenta');
     if(S.funil && S.funil.id === f.id){ S.funil = null; $('blocoKanban').hidden = true; }
     if(S.admFunilId === f.id) S.admFunilId = null;
     return carregarTudo().then(function(){
@@ -6071,6 +6246,21 @@ function preencherRamoDe(etapa){
 
 function movimentoMudou(){
   var mov = $('fEtapaMovimento').value;
+  var prev = $('fEtapaMovIco');
+  if(prev){
+    var base = S.edit.etapa || { funil_id:S.admFunilId };
+    var m = modoSaida(Object.assign({}, base, { movimento:mov,
+      assinatura_chave: mov === 'assinatura' ? ($('fEtapaAssinatura').value || null) : null }));
+    prev.innerHTML = icoModo(m, 14) + esc(m.nome);
+    prev.title = m.titulo;
+  }
+  var leg = $('fEtapaMovLegenda');
+  if(leg && !leg.innerHTML){
+    leg.innerHTML = Object.keys(MODOS_SAIDA).map(function(k){
+      var md = MODOS_SAIDA[k];
+      return '<span title="' + esc(md.titulo) + '">' + icoModo(md, 13) + esc(md.nome) + '</span>';
+    }).join('');
+  }
   $('boxAssinatura').hidden = mov !== 'assinatura';
   if(mov === 'assinatura') quemAssinaMudou();
 }
@@ -6388,7 +6578,7 @@ function renderAdmRegras(){
   var fxAdm = fluxoDo(S.admFunilId);
   $('avisoFluxoAuto').innerHTML = fxAdm.automacao ? '' :
     '<div class="aviso erro">As automações deste funil estão <strong>desligadas</strong> no fluxo do card. ' +
-    'Nada aqui vai rodar até religar em <strong>Funis e etapas › Editar funil</strong>.</div>';
+    'Nada aqui vai rodar até religar na aba <strong>Funil</strong>, em Configurar funil.</div>';
   $('admRegrasLista').innerHTML = regras.length ? regras.map(function(r){
     var gat = { salvar:'sempre que mudar', criar:'ao entrar no funil', entrada:'ao chegar na etapa',
                 prazo:'ao passar do prazo', manual:'manual' }[r.gatilho] || r.gatilho;
@@ -6654,16 +6844,17 @@ function iniciar(){
   $('infoPerm').textContent = rot[APP.permissao] || '';
   $('linkHub').href = APP.hub;
   if(eAdmin()){
-    $('tabAdm').hidden = false;
     $('btnNovoFunilAtalho').hidden = false;
+    montarFerramentas();
   }
   carregarContas().then(carregarTudo);
   ligarSyncAutomatico();
 
   document.addEventListener('keydown', function(ev){
     if(ev.key !== 'Escape') return;
-    if(document.querySelector('.modal.on')){
-      ['mdFunil','mdEtapa','mdCampo','mdRegra','mdCard','mdLigacao'].forEach(fechar);
+    var abertos = document.querySelectorAll('.modal.on');
+    if(abertos.length){
+      abertos[abertos.length - 1].classList.remove('on');
     } else if(S.menuGateway){ fecharMenuGateway(); }
     else if(S.consultaFluxo){ fecharConsultaFluxo(); }
     else if(S.painelEtapa){ fecharPainelEtapa(); }
@@ -6692,6 +6883,10 @@ window.alternarLigar = alternarLigar;
 window.abrirMenuGateway = abrirMenuGateway;
 window.fecharMenuGateway = fecharMenuGateway;
 window.comecarSaida = comecarSaida;
+window.abrirFerramenta = abrirFerramenta;
+window.ferrAba = ferrAba;
+window.configurarFunilAtual = function(){ abrirFunilForm(S.admFunilId); };
+window.editarFluxoAtual = function(){ fechar('mdFerramenta'); editarFluxo(S.admFunilId); };
 window.abrirDecisao = abrirDecisao;
 window.editarEtapaNoMapa = editarEtapaNoMapa;
 window.editarFluxo = editarFluxo;
